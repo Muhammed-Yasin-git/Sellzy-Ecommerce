@@ -1,0 +1,116 @@
+<!-- include footer -->
+<%- include('include/_adminbase.ejs') %>
+<!-- /include footer -->
+
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+
+<link rel="stylesheet" href="css/admindash.css">
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+	
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+		
+
+			
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Users</h3>
+                        <div >
+                          <label for="name" class="text-dark">Search Here</label>
+                      <input type="text" name="name" placeholder="Search Here " id="name-search"  style="width: 40%;
+                      padding: .6em 1em;
+                      margin: .5em 0;
+                      border: 1px solid black;
+                      font-family: 'Barlow', sans-serif;
+                      font-size: 1em;
+                      border-radius: .2em;">
+                     
+                      </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>SI No</th>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <%  for(let i = 0;i < users.length;i++) {%>
+ 
+                            <tr style="cursor: pointer; "  onclick="userdetails('<%=users[i]._id%>')">
+                              
+                                <td>&nbsp;</td>
+                                <td><%= i+1 %></td>
+                                <td><%=users[i].userName%></td>
+                                <td><%=users[i].email%></td>
+                                <td><%=users[i].mobile%></td>
+                                <td><%=users[i].status%></td>
+                                <td>
+                                  <% if (users[i].block==="true") { %>
+                                    <a href="/api/block/?email=<%= users[i].email%>">
+                                      <button type="button" class="btn btn-danger" style="margin-right: -5%;">Unblock</button>
+                                    </a>
+                                  <% } else { %>
+                                    <a href="/api/block/?email=<%= users[i].email%>">
+                                      <button type="button" class="btn btn-success">Block</button>
+                                    </a>
+                                  <% } %>                              
+                                </td>
+                            </tr>
+                            <%}%>
+                           
+                        </tbody>
+                    </table>
+                </div>
+               
+
+			
+		</main>
+		<!-- MAIN -->
+	</section>
+  <style>
+    ol, ul {
+      padding-left: 0%;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/adminserver.js"></script>
+  <!-- CONTENT -->
+	<script src="js/new.js"></script>
+ 
+<script>
+    function userdetails(id){
+      const userURL = `/user-details?userid=${id}`
+      
+
+      window.location.href = userURL
+    }
+
+</script>
+	
+</body>
+</html>
