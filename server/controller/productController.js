@@ -127,7 +127,7 @@ exports.deleteImage = (req, res) => {
           res.status(500).send("Error deleting image file");
           return;
         }
-        res.send("Image deleted successfully");
+        res.redirect(`/update-image/?id=${productId}`);
       });
     })
     .catch((err) => {

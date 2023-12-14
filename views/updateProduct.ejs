@@ -162,7 +162,7 @@ rel="stylesheet"
           parseInt(priceInput.value) < 0 ||
           parseInt(discountInput.value) < 0 ||
           parseInt(stockInput.value) < 0 ||
-          parseInt(discountInput.value) < 1 || // Check for minimum discount
+          parseInt(discountInput.value) < 0 || // Check for minimum discount
           parseInt(discountInput.value) > 100   // Check for maximum discount
         ) {
           event.preventDefault(); // Prevent form submission

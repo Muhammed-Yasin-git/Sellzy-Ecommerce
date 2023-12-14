@@ -80,15 +80,15 @@
 
                                 <!-- <h5 class="card-title mb-3">Shipping info</h5> -->
 
+                                <% const defaultAddress = users.address.find(address => address.default); %>
 
-
-                                <% if(1){ %>
+                                
                                     <div class="row">
                                         <div class="col-sm-8 mb-3">
                                             <p class="mb-0">Address</p>
                                             <div class="form-outline">
                                                 <input type="text" id="typeText" placeholder="Type here" name="Address"
-                                                    value="  <%=users.address[a].Address%>" class="form-control"
+                                                    value="<%= defaultAddress ? defaultAddress.Address : '' %>" class="form-control"
                                                     required />
                                             </div>
                                         </div>
@@ -96,7 +96,7 @@
                                         <div class="col-sm-4 mb-3">
                                             <p class="mb-0">City</p>
                                             <div class="form-outline">
-                                                <input type="text" id="typeText" value="  <%=users.address[a].City%>"
+                                                <input type="text" id="typeCity" value="<%= defaultAddress ? defaultAddress.City : '' %>"
                                                     name="City" placeholder="city" class="form-control" required />
                                             </div>
                                         </div>
@@ -104,8 +104,8 @@
                                         <div class="col-sm-4 mb-3">
                                             <p class="mb-0">House NO.</p>
                                             <div class="form-outline">
-                                                <input name="House_No" type="text" id="typeText" placeholder="Type here"
-                                                    value=" <%=users.address[a].House_No%>" class="form-control"
+                                                <input name="House_No" type="number" id="typeHouseNo" placeholder="Type here"
+                                                    value="<%= defaultAddress ? defaultAddress.House_No : '' %>" class="form-control"
                                                     required />
                                             </div>
                                         </div>
@@ -113,65 +113,21 @@
                                         <div class="col-sm-4 col-6 mb-3">
                                             <p class="mb-0">Postal code</p>
                                             <div class="form-outline">
-                                                <input type="text" id="typeText" name="postalcode" class="form-control"
-                                                    value=" <%=users.address[a].postcode%>" required />
+                                                <input type="number" id="typePostalCode" name="postalcode" class="form-control"
+                                                    value="<%= defaultAddress ? defaultAddress.postcode : '' %>" required />
                                             </div>
                                         </div>
 
                                         <div class="col-sm-4 col-6 mb-3">
                                             <p class="mb-0">Alternate Number</p>
                                             <div class="form-outline">
-                                                <input type="text" id="typeText" name="altr_number"
-                                                    class="form-control" value="  <%=users.address[a].altr_number%>"
+                                                <input type="number" id="typeAltNumber" name="altr_number"
+                                                    class="form-control" value="<%= defaultAddress ? defaultAddress.altr_number : '' %>"
                                                     required />
                                             </div>
                                         </div>
                                     </div>
-                                    <% } else{%>
-                                        <div class="row">
-                                            <div class="col-sm-8 mb-3">
-                                                <p class="mb-0">Address</p>
-                                                <div class="form-outline">
-                                                    <input type="text" id="typeText" placeholder="Type here"
-                                                        name="Address" value=" " class="form-control" required />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4 mb-3">
-                                                <p class="mb-0">City</p>
-                                                <div class="form-outline">
-                                                    <input type="text" id="typeText" value="" name="City"
-                                                        placeholder="city" class="form-control" required />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4 mb-3">
-                                                <p class="mb-0">House NO.</p>
-                                                <div class="form-outline">
-                                                    <input name="House_No" type="number" id="typeText"
-                                                        placeholder="Type here" value="" class="form-control"
-                                                        required />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4 col-6 mb-3">
-                                                <p class="mb-0">Postal code</p>
-                                                <div class="form-outline">
-                                                    <input type="number" id="typeText" name="postalcode"
-                                                        class="form-control" value="" required />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4 col-6 mb-3">
-                                                <p class="mb-0">Alternate Number</p>
-                                                <div class="form-outline">
-                                                    <input type="number" id="typeText" name="altr_number"
-                                                        class="form-control" value=" " required />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <%} %>
-
+                                    
                                             <!-- <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" />
                     <label class="form-check-label" for="flexCheckDefault1">Save this address</label>
@@ -213,7 +169,7 @@
                                                                             aria-expanded="false">
                                                                             <input class="form-check-input pay-form" type="radio" name="payment" id="flexCheckDefault1"
                                                                                 onclick="handlePaymentSelection('credit-card')">
-                                                                            <label class="form-check-label pt-1" for="payment1">Credit Card</label>
+                                                                            <label class="form-check-label pt-1" for="payment1" value="online_payment">Credit Card</label>
                                                                         </div>
                                                                     </h2>
                                                                     <div id="collapseCC" class="accordion-collapse collapse" data-bs-parent="#accordionPayment">
@@ -229,7 +185,7 @@
                                                                             aria-expanded="false">
                                                                             <input class="form-check-input" type="radio" name="payment" id="payment2"
                                                                                 
-                                                                            <label class="form-check-label pt-1" for="payment2">Cash On Delivery (COD)</label>
+                                                                            <label class="form-check-label pt-1" for="payment2" value="COD">Cash On Delivery (COD)</label>
                                                                         </div>
                                                                     </h2>
                                                                     
@@ -349,13 +305,21 @@
                                                     <form action="/checkout/address?id=<%= i %>&prId<%= prId %>"
                                                         method="post">
                                                         <input type="text" value="<%=price %>" hidden name="totalsum">
-                                                        <button class="btn btn-secondary" type="submit">Select</button>
+                                                        <button class="btn btn-secondary" onclick="selectAddress(<%= i %>)" type="button">Select</button>
+
+
+
                                                     </form>
 
 
                             </p>
                             <% } %>
-                                <p><a href="/Add-address/checkout">Add new Address</a></p>
+                           <%  if(users.address.length==4) {%>
+                                <p style="display: none;"><a href="#">Add new Address</a></p>
+                                <% }else { %>
+
+                                    <p><a href="/Add-address/checkout">Add new Address</a></p>
+                                    <% } %>
 
                                 <!-- Add form or additional content for changing addresses -->
                     </div>
@@ -399,5 +363,23 @@
         document.forms["checkoutForm"].submit(); // Assuming your form has the id "checkoutForm"
     }
 </script>
+<script>
+    function selectAddress(index) {
+        // Get the selected address
+        const selectedAddress = <%= JSON.stringify(users.address[a]) %>;
+
+        // Update form fields with the selected address
+        document.getElementById('typeText').value = selectedAddress.Address;
+        document.getElementById('typeCity').value = selectedAddress.City;
+        document.getElementById('typeHouseNo').value = selectedAddress.House_No;
+        document.getElementById('typePostalCode').value = selectedAddress.postcode;
+        document.getElementById('typeAltNumber').value = selectedAddress.altr_number;
+
+        // Close the modal using jQuery
+        $('#changeAddressModal').modal('hide');
+    }
+</script>
+
+
 
 </html>

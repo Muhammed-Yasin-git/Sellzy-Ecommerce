@@ -14,7 +14,7 @@
 
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-12">
 
                 <div class="card">
                     <div class="card-header">
@@ -37,10 +37,10 @@
                         <div class="mt-4">
                             <h5>Image Preview:</h5>
 
-                            <div id="imagePreview" class="d-flex flex-wrap">
+                            <div id="imagePreview" class="d-flex ">
                                 <% for(let i=0; i < images.length; i++) { %>
-                                    <div class="image-container d-inline-block">
-                                        <img src="/images/<%= images[i] %>" alt="" class="img-thumbnail m-2">
+                                    <div class="image-container d-inline-block ">
+                                        <img src="/images/<%= images[i] %>" alt="" class="img-thumbnail m-2" style="height: 200px; width: 200px;">
                                         <button class="btn btn-danger btn-sm mt-2"
                                             onclick="deleteImage('<%= images[i] %>','<%=id%>')">Remove</button>
                                     </div>
@@ -79,7 +79,14 @@
                     var image = document.createElement('img');
                     image.src = e.target.result;
                     image.className = 'img-thumbnail m-2';
+
+
+                    image.style.width = '200px';
+                    image.style.height = '200px';
+
                     imageContainer.appendChild(image);
+
+
 
                     // Create the button
                     var button = document.createElement('button');

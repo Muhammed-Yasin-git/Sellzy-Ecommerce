@@ -12,7 +12,8 @@
           <h5 class="mb-0">Update Address</h5>
         </div>
         <div class="card-body">
-            <form action="/update-address" method="post">
+          <form action="/update-address/?id=<%= users.address[addressIndex]._id %>&addressIndex=<%= addressIndex %>" method="post">
+
                 <div class="card shadow-0 border">
                     <div class="p-4">
                       <h5 class="card-title mb-3">Enter Your Details</h5>
@@ -42,42 +43,42 @@
                           <p class="mb-0">Address</p>
                           <div class="form-outline">
                             <input type="text" id="typeText" placeholder="Type here" class="form-control" name="Address" 
-                            value="<%= address[0].Address %>"/>
+                            value="<%= address[addressIndex].Address %>" />
                           </div>
                         </div>
           
                         <div class="col-sm-4 mb-3">
                           <p class="mb-0">City</p>
                           <div class="form-outline">
-                            <input value="<%= address[0].City %>" type="text" id="typeText" name="City" placeholder="city" class="form-control" />
+                            <input value="<%= address[addressIndex].City %>" type="text" id="typeText" name="City" placeholder="city" class="form-control" />
                           </div>
                         </div>
 
                         <div class="col-sm-4 mb-3">
                             <p class="mb-0">State</p>
                             <div class="form-outline">
-                              <input type="text" id="typeText" name="State" placeholder="city" class="form-control" value="<%= address[0].State %>"/>
+                              <input type="text" id="typeText" name="State" placeholder="city" class="form-control" value="<%= address[addressIndex].State %>"/>
                             </div>
                           </div>
           
                         <div class="col-sm-4 mb-3">
                           <p class="mb-0">House NO.</p>
                           <div class="form-outline">
-                            <input type="text" id="typeText" placeholder="Type here" name="House_No" class="form-control" value="<%= address[0].House_No %>"/>
+                            <input type="text" id="typeText" placeholder="Type here" name="House_No" class="form-control" value="<%= address[addressIndex].House_No %>"/>
                           </div>
                         </div>
           
                         <div class="col-sm-4 col-6 mb-3">
                           <p class="mb-0">Postal code</p>
                           <div class="form-outline">
-                            <input type="text" id="typeText" name="postcode" class="form-control" value="<%= address[0].postcode %>" />
+                            <input type="text" id="typeText" name="postcode" class="form-control" value="<%= address[addressIndex].postcode %>" />
                           </div>
                         </div>
           
                         <div class="col-sm-4 col-6 mb-3">
                           <p class="mb-0">Alternate Number</p>
                           <div class="form-outline">
-                            <input type="text" id="typeText" name="altr_number" class="form-control" value="<%= address[0].altr_number %>"/>
+                            <input type="text" id="typeText" name="altr_number" class="form-control" value="<%= address[addressIndex].altr_number %>"/>
                           </div>
                         </div>
                       </div>

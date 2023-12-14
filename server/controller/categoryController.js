@@ -55,22 +55,41 @@ exports.deletecategory = (req, res) => {
       });
   };
   
-exports.addcategory = (req, res) => {
-  const category = new categorydb({
-    name: req.body.categoryName,
-  });
-
-  category
-    .save()
-    .then((data) => {
-      res.redirect("/admin-category");
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    });
-};
-
+  exports.addcategory = (req, res) => {
+    const categoryName = req.body.categoryName;
+  
+    // Check if the input is only spaces or an empty string
+    if (!categoryName.trim()) {
+      return res.status(400).send("Category name cannot be empty or contain only spaces");
+    }
+  
+    // Check if the category already exists
+    categorydb.findOne({ name: categoryName })
+      .then(existingCategory => {
+        if (existingCategory) {
+          // Category already exists, you can handle this case (e.g., send an error response)
+          return res.status(400).send("Category already exists");
+        }
+  
+        // Category does not exist, proceed to add it
+        const category = new categorydb({
+          name: categoryName,
+        });
+  
+        category.save()
+          .then((data) => {
+            res.redirect("/admin-category");
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Internal Server Error");
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+      });
+  };
 exports.unlistedcategory = (req, res) => {
   categorydb.find({ active: false }).then((data) => {
     res.render("unlistedcategory", { category: data });

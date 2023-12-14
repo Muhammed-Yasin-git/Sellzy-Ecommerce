@@ -56,6 +56,7 @@ exports.find = (req, res) => {
 
   const nemail = req.body.email;
   const password = req.body.password;
+  req.session.testemail=req.body.email;
 
   Userdb.findOne({ email: nemail })
     .then((user) => {
@@ -108,43 +109,55 @@ exports.find = (req, res) => {
 };
 
 exports.userHome = (req, res) => {
+  const userEmail = req.session.testemail;
+  console.log("User email:", userEmail); // Log user email to check if it's defined
+
   axios.get('http://localhost:3000/api/products')
     .then((product) => {
-      const userEmail = req.session.email;
+      // console.log("Product data:", product.data); // Log product data
 
-      Userdb.find({ email: userEmail })
-        .then((userData) => {
-          // console.log(userData);
-          if (userEmail) {
-            req.session.isBlock = false
+      if (userEmail) {
+        Userdb.find({ email: userEmail })
+          .then((userData) => {
+            console.log("User data:", userData); // Log user data
+
+            req.session.isBlock = false;
             req.session.isValidate = false;
             res.render("user_home", { products: product.data, users: userData });
-          } else {
-            req.session.isBlock = false
-            req.session.isValidate = false;
-            res.render("user_home", { products: product.data, users: null });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          res.render("user_home", { products: product.data, users: null, status: null });
-        });
+          })
+          .catch((err) => {
+            console.log("Error fetching user data:", err);
+            res.render("user_home", { products: product.data, users: null, status: null });
+          });
+      } else {
+        req.session.isBlock = false;
+        req.session.isValidate = false;
+        res.render("user_home", { products: product.data, users: null });
+      }
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Axios error:", err);
       res.send(err);
     });
 };
 
 
+
 exports.logout = (req, res) => {
-  nemail = req.body.email;
+  const nemail = req.body.email;
   console.log(nemail);
 
   Userdb.updateOne({ email: nemail }, { $set: { status: "Inactive" } })
     .then((response) => {
-      req.session.userAuthenticated = false
-      res.redirect('/signin');
+      req.session.userAuthenticated = false;
+      req.session.destroy((err) => {
+        if (err) {
+          console.error(err);
+          res.send(err);
+        } else {
+          res.redirect('/signin');
+        }
+      });
     })
     .catch((err) => {
       console.error(err);
@@ -224,15 +237,32 @@ const sendOtpMail = async (req, res) => {
    }
  };
 
-exports.sendOtp = (req, res) => {
+exports.sendOtp = async (req, res) => {
+  console.log("hi");
+
   if (!req.body || !req.body.email) {
     console.log("not working");
     res.send("Email is required");
     return;
   }
 
-  req.session.email = req.body.email;
-  sendOtpMail(req, res);
+  // Check if the user already exists
+  try {
+    const existingUser = await Userdb.findOne({ email: req.body.email });
+
+    if (existingUser) {
+      console.log("User already exists");
+      req.session.isEmailValidate = true;
+      res.redirect("/verify")
+      return;
+    }
+
+    req.session.email = req.body.email;
+    sendOtpMail(req, res);
+  } catch (error) {
+    console.error("Error checking user existence:", error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 // exports.forgotpassword = (req,res)=>{
@@ -428,26 +458,31 @@ exports.addAddress = async (req, res) => {
   try {
     const email = req.session.email;
 
-    const NewAddress = {
+    const newAddress = {
       Address: req.body.Address,
       City: req.body.City,
       House_No: req.body.House_No,
       State: req.body.State,
       altr_number: req.body.altr_number,
       postcode: req.body.postcode,
+      default: true
     };
 
-    req.session.address = NewAddress;
+    // Set all other addresses' default property to false
+    await Userdb.updateOne(
+      { email: email, "address.default": true },
+      { $set: { "address.$.default": false } }
+    );
 
     // Use findOneAndUpdate to get the document before the update
     const result = await Userdb.findOneAndUpdate(
       { email: email },
-      { $push: { address: NewAddress } },
+      { $push: { address: newAddress } },
       { new: true } // Return the modified document
     );
 
     if (!result) {
-      console.log("no address is added");
+      console.log("No address is added");
       return res
         .status(404)
         .json({ error: "User not found or no modifications made" });
@@ -463,15 +498,53 @@ exports.addAddress = async (req, res) => {
   }
 };
 
+exports.makeDefault = async (req, res) => {
+  const email = req.session.email;
+  const id = req.query.id;
+
+  try {
+    // Find the user and their addresses
+    const user = await Userdb.findOne({ email: email });
+
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).send("User not found");
+    }
+
+    // Iterate through the addresses and set the default flag
+    user.address.forEach((address) => {
+      if (address._id.toString() === id) {
+        address.default = true;
+      } else {
+        address.default = false;
+      }
+    });
+
+    // Save the updated user
+    await user.save();
+
+    // Redirect to the user account details page
+    res.redirect(`/user-account-details?id=${user._id}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
 // Assuming this is in your userController.js
 exports.deleteAddress = (req, res) => {
   const email = req.session.email;
   const id = req.query.id;
+  const addressIndex = req.query.addressIndex;
 
-  Userdb.findOneAndUpdate({ email: email }, { $pull: { address: { _id: id } } })
+  Userdb.findOneAndUpdate(
+    { email: email },
+    { $pull: { address: { _id: id } } }
+  )
     .then(data => {
       // Redirect to user account details without passing the deleted address ID
-      res.redirect(`/user-account-details?id=${data._id}`);
+      res.redirect("/user-address");
     })
     .catch(err => {
       res.send(err);
@@ -479,31 +552,45 @@ exports.deleteAddress = (req, res) => {
 };
 
 
-exports.updateAddress  = (req,res)=>{
-  const email = req.session.email;
-  const id = req.query.id
 
+exports.updateAddress = (req, res) => {
+  const email = req.session.email;
+  const id = req.query.id;
+
+  // Extract the address fields from the request body
+  const updatedAddress = {
+    Address: req.body.Address,
+    City: req.body.City,
+    House_No: req.body.House_No,
+    State: req.body.State,
+    altr_number: req.body.altr_number,
+    postcode: req.body.postcode,
+  };
+
+  console.log("Email:", email);
+  console.log("ID:", id);
+
+  // Use findOneAndUpdate to update the specific address in the array
   Userdb.findOneAndUpdate(
-    { email: email },
-    {
-      $set: {
-        address: {
-          Address: req.body.Address,
-          City: req.body.City,
-          House_No: req.body.House_No,
-          State: req.body.State,
-          altr_number: req.body.altr_number,
-          postcode: req.body.postcode,
-        }
+    { email: email, "address._id": id },
+    { $set: { "address.$": updatedAddress } },
+    { new: true } // Return the modified document
+  )
+    .then((updatedDocument) => {
+      // Check if any document was modified
+      if (!updatedDocument) {
+        console.error("Address not found");
+        return res.status(404).send("Address not found");
       }
-    }
-  ).then(data => {
-  res.send("<script>alert('Data updated successfully!'); window.location='/user-address';</script>");
-})
-.catch(err => {
-  res.send(err);
-});
-}
+
+      console.log("Address updated successfully:", updatedDocument);
+      res.redirect("/user-address"); // Redirect to the address page after successful update
+    })
+    .catch((err) => {
+      console.error("Error updating address:", err);
+      res.status(500).send("Internal Server Error");
+    });
+};
 
 
 
@@ -516,6 +603,17 @@ exports.updateprofile = async (req, res) => {
 
     console.log("Email:", email);
     console.log("User ID:", id);
+
+    // Check if both userName and mobile contain only spaces
+    if (!req.body.userName.trim() || !req.body.mobile.trim()) {
+      return res.send("enter Valid details");
+    }
+
+    // Validate mobile number format
+    const mobileRegex = /^\d{10}$/;
+    if (req.body.mobile && !mobileRegex.test(req.body.mobile)) {
+      return res.send("Mobile number should contain 10 digits");
+    }
 
     const data = await Userdb.findOneAndUpdate(
       { _id: id },
@@ -531,7 +629,7 @@ exports.updateprofile = async (req, res) => {
     console.log("Updated Data:", data);
 
     if (data) {
-      res.send(`<script>alert('Data updated successfully!'); window.location='/user-account-details?id=${data._id}';</script>`);
+      res.send("<script>alert('Data updated successfully!'); window.location='/user-account-details?id=" + data._id + "';</script>");
     } else {
       res.send("<script>alert('User not found!'); window.location='/some-error-page';</script>");
     }
@@ -540,6 +638,7 @@ exports.updateprofile = async (req, res) => {
     res.send(err);
   }
 };
+
 
 
 exports.checkOut = (req, res) => {
@@ -568,7 +667,7 @@ exports.checkOut = (req, res) => {
 exports.loadcheckout = (req, res) => {
   const email = req.session.email;
   const totalprice = req.body.totalsum;
-  const index = req.query.id || 0;
+  const index = req.query.id || 1;
   const prId = req.query.prId;
 
   console.log(totalprice + "from checkot 2");
@@ -579,7 +678,7 @@ exports.loadcheckout = (req, res) => {
         prId: prId,
         users: userdata,
         price: totalprice,
-        a: index,
+          a: index,
       });
     })
     .catch((err) => {
@@ -598,6 +697,7 @@ exports.addAddressCheckout = async (req, res) => {
       State: req.body.State,
       altr_number: req.body.altr_number,
       postcode: req.body.postcode,
+      default: Boolean(req.body.default)
     };
 
     req.session.address = NewAddress;
@@ -625,3 +725,8 @@ exports.addAddressCheckout = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+exports.changepassword = (req,res)=>{
+  
+}

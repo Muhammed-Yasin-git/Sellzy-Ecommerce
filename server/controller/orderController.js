@@ -127,7 +127,7 @@ exports.cancel = (req, res) => {
         .then(() => {
             orderDb.findOne({_id:orderId})
             .then(data=>{
-              productdb.updateOne({_id:data.products._id},{$inc:{stock:1}})
+              productdb.updateOne({_id:data.products[0]._id},{$inc:{stock:1}})
               .then(udata=>{
                 res.redirect("/your-orders");
               })
@@ -146,7 +146,7 @@ exports.return = (req, res) => {
         .then(() => {
             orderDb.findOne({_id:orderId})
             .then(data=>{
-              productdb.updateOne({_id:data.products._id},{$inc:{stock:1}})
+              productdb.updateOne({_id:data.products[0]._id},{$inc:{stock:1}})
               .then(udata=>{
                 res.redirect("/your-orders");
               })

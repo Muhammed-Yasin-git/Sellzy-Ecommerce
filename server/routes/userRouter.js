@@ -12,8 +12,8 @@ const orderController = require("../controller/orderController")
 
 
 router.get('/',userController.userHome)
-router.get('/signin',userServices.signin)
-router.get('/signup',userServices.signup)
+router.get('/signin',middlewares.checkNotAuthenticateuser,userServices.signin)
+router.get('/signup',middlewares.checkNotAuthenticateuser,userServices.signup)
 router.get('/verify',userServices.verify)
 
 
@@ -26,10 +26,13 @@ router.get('/user-address',middlewares.userCheckMiddleware,userServices.userAddr
 router.get('/delete-address',middlewares.userCheckMiddleware,userController.deleteAddress)
 router.get('/update-address',middlewares.userCheckMiddleware,userServices.updateAddress)
 router.post('/update-address',userController.updateAddress)
+router.post('/make-default',userController.makeDefault)
 
 
 router.get('/edit-profile',middlewares.userCheckMiddleware,userServices.editprofile) 
 router.post('/update-profile',userController.updateprofile) 
+router.post('/change-password',userController.changepassword) 
+
 
 
 router.post('/checkout-page',userController.checkOut)
@@ -55,7 +58,10 @@ router.post('/return-reason',orderController.return)
 
 router.get('/forget-password',userServices.forgot)
 router.get('/reset-password-otp',userServices.otp1)
+
+
 router.post('/verify-otp',userController.otpReset)
+router.get('/verify-otp',userServices.otp)
 router.get('/reset-password-form',userServices.resetpassword)
 router.post('/send-otp',userController.sendOtp)
 router.post('/otp-verify',userController.otpverify)
@@ -68,7 +74,7 @@ router.post('/reset-password', userController.resetpassword);
 
 
 router.post('/api/signup',userController.create)
-router.post('/api/signin',userController.find)
+router.post('/api/signin',middlewares.checkNotAuthenticateuser,userController.find)
 router.post('/api/logout',userController.logout)
 
 

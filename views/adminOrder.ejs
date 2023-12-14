@@ -79,7 +79,7 @@
                     </thead>
                     <tbody>
                         
-                        <% for (let i = 0; i < data.length; i++) { %>
+                        <% for (let i = data.length - 1; i >= 0; i--) { %>
                             <% for (let j = 0; j < data[i].products.length; j++) { %>
                                 <tr>
                                     <td>
@@ -94,7 +94,7 @@
                                     <% if (data[i].status == 'pending') { %>
                                         <td><span class="status pending"><%= data[i].status %></span></td>
                                     <% } else if (data[i].status == 'Shipped') { %>
-                                        <td><span class="status shipped"><%= data[i].status %></span></td>
+                                        <td><span class="status" style="background-color: blue;"><%= data[i].status %></span></td>
                                     <% } else if (data[i].status == 'Delivered') { %>
                                         <td><span class="status" style="background-color: green;"><%= data[i].status %></span></td>
                                     <% } else if (data[i].status == 'Cancelled') { %>
@@ -126,23 +126,31 @@
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option2" value="Delivered" <%= data[i].status === 'Delivered' ? 'checked' : '' %>>
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option2" value="Shipped" <%= data[i].status === 'Shipped' ? 'checked' : '' %>>
                                                         <label class="form-check-label" for="option2">
+                                                            Shipped
+                                                        </label>
+                                                    </div>
+                                                    
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option3" value="Delivered" <%= data[i].status === 'Delivered' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option3">
                                                             Delivered
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option3" value="Cancelled" <%= data[i].status === 'Cancelled' ? 'checked' : '' %>>
-                                                        <label class="form-check-label" for="option3">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option4" value="Cancelled" <%= data[i].status === 'Cancelled' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option4">
                                                             Cancelled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option4" value="Returned" <%= data[i].status === 'Returned' ? 'checked' : '' %>>
-                                                        <label class="form-check-label" for="option4">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option5" value="Returned" <%= data[i].status === 'Returned' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option5">
                                                             Returned
                                                         </label>
                                                     </div>
+                                                    
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                
                                                         <button type="submit" class="btn btn-primary">Save changes</button>

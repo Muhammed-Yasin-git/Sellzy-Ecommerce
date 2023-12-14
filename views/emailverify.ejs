@@ -70,11 +70,17 @@ rel="stylesheet"
     <div class="row justify-content-center " style="display: flex; align-content: center;">
         <div class="col-12 col-md-6 col-lg-4" style="min-width: 500px ;  margin-top: 100px;">
           <div class="card bg-white mb-1 mt-5 border-0" style="border-radius: 10px; box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02); display: flex; align-items: center;">
+            
             <div class="card-body p-5 text-center" >
               <h4 >Email Verification</h4>
-              <p style="margin-bottom: 12%; color: green;">We will send you an OTP</p>
+              <p style="margin-bottom: 5%; color: green;">We will send you an OTP</p>
   
+              <% if (isEmailValidate) { %>
+                <label style="position: static;color: red;font-size: small; margin-bottom: 5%;">User Already Exists.!!</label>
+                <a href="/signin" style="font-size: small; font-weight: 600; text-decoration: none;">Log In</a>
+            <% } %>
               <div class="form-group ">
+                
                 <form action="/send-otp" method="post">  
                 <input type="text" name="email" class="form-control" id="productname"
                 placeholder="Enter Your Email" style=" margin-left: -25%; width: 150%;" required>

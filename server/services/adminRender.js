@@ -21,7 +21,7 @@ exports.adminOrder = async  (req,res)=>{
     orderdb.find()
     .then(data=>{
         // console.log(data);
-        console.log(data[data.length - 1].products);
+        // console.log(data[data.length - 1].products);
         res.render("adminOrder",{data:data})
     })
 

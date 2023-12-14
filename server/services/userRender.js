@@ -6,6 +6,7 @@ const orderdb = require("../model/ordermodel")
 
 
 exports.signin = (req,res)=>{
+    req.session.isEmailValidate = false;
     res.render("sign_in",{isValidate:req.session.isValidate,isBlock:req.session.isBlock})
 }
 
@@ -16,13 +17,15 @@ exports.signup = (req,res)=>{
     res.render("signup",{email:email})
 }
 exports.otp = (req,res)=>{
+    req.session.isEmailValidate = false;
     res.render("otp")
 }
 exports.otp1 = (req,res)=>{
     res.render("otp1")
 }
 exports.verify = (req,res)=>{
-    res.render("emailverify")
+    
+    res.render("emailverify",{isEmailValidate:req.session.isEmailValidate})
 }
 exports.forgot = (req,res)=>{
     res.render("forgot")
@@ -96,6 +99,7 @@ exports.userAddress = (req, res) => {
 
     Userdb.find({ email: email })
         .then((userdata) => {
+            console.log(address);
             const blocked = req.session.blocked;
             res.render("address", {
                 users: userdata,
@@ -134,8 +138,10 @@ exports.updateAddress = (req, res) => {
         const address = data.address;
         console.log(address);
   
+        const addressIndex = req.query.addressIndex;
+
         // Render the updateAddress page and pass the address data to it
-        res.render("updateAddress", { id: id, address: address });
+        res.render("updateAddress", { users:data , id: id, address: address ,addressIndex:addressIndex});
       })
       .catch((err) => {
         console.error("Error retrieving address:", err);

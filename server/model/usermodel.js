@@ -8,6 +8,10 @@ const addressSchema = new Schema({
     State: String,
     altr_number: Number,
     postcode: Number,
+    default:{
+        type:Boolean,
+        default:true
+    }
 });
 
 var schema = new Schema({ // Use Schema here
