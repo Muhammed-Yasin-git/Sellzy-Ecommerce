@@ -13,7 +13,7 @@ const orderController = require("../controller/orderController")
 
 router.get('/',userController.userHome)
 router.get('/signin',middlewares.checkNotAuthenticateuser,userServices.signin)
-router.get('/signin',middlewares.checkNotAuthenticateuser,userServices.signin)
+router.get('/signup',middlewares.checkNotAuthenticateuser,userServices.signup)
 router.get('/our-store',userController.ourstore)
 router.get('/verify',userServices.verify)
 
