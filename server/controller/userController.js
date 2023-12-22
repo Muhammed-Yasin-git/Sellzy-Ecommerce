@@ -1,13 +1,15 @@
 const bcrypt = require('bcrypt');
 const Userdb = require("../model/usermodel");
+const productDb = require("../model/productsmodel");
+const categorydb = require("../model/categorymodel");
 const otpdb = require("../model/otpmodel");
 const blockDb = require("../model/blockmodel");
 const axios = require("axios");
-const nodemailer=require("nodemailer")
-const Mailgen=require("mailgen")
+const nodemailer = require("nodemailer")
+const Mailgen = require("mailgen")
 
 
-var nemail = '';
+
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -56,7 +58,7 @@ exports.find = (req, res) => {
 
   const nemail = req.body.email;
   const password = req.body.password;
-  req.session.testemail=req.body.email;
+  req.session.testemail = req.body.email;
 
   Userdb.findOne({ email: nemail })
     .then((user) => {
@@ -168,7 +170,7 @@ exports.logout = (req, res) => {
 
 
 const otpGenrator = () => {
-  return `${Math.floor(1000 + Math.random() * 9000)}`;  
+  return `${Math.floor(1000 + Math.random() * 9000)}`;
 };
 
 const sendOtpMail = async (req, res) => {
@@ -183,7 +185,7 @@ const sendOtpMail = async (req, res) => {
     },
   });
   // console.log(transporter);
-  
+
 
   const MailGenerator = new Mailgen({
     theme: "default",
@@ -193,7 +195,7 @@ const sendOtpMail = async (req, res) => {
     },
   });
 
-  const response = {  
+  const response = {
     body: {
       name: req.session.email,
       intro: "Your OTP for SELLZY verification is:",
@@ -206,8 +208,8 @@ const sendOtpMail = async (req, res) => {
       },
       outro: "Looking forward to doing more business",
     },
-  }; 
-// console.log(req.body.email);
+  };
+  // console.log(req.body.email);
   const mail = MailGenerator.generate(response);
 
   const message = {
@@ -216,10 +218,10 @@ const sendOtpMail = async (req, res) => {
     subject: "SELLZY OTP Verification",
     html: mail,
   };
- 
+
   try {
     const newOtp = new otpdb({
-      email:req.session.email,
+      email: req.session.email,
       otp: otp,
       createdAt: Date.now(),
       expiresAt: Date.now() + 20000,
@@ -234,8 +236,8 @@ const sendOtpMail = async (req, res) => {
   } catch (error) {
     console.log("otp not sending");
     console.log(error);
-   }
- };
+  }
+};
 
 exports.sendOtp = async (req, res) => {
   console.log("hi");
@@ -412,40 +414,40 @@ const forgotSendOtpMail = async (req, res, nemail) => {
 };
 exports.resetpassword = async (req, res) => {
   try {
-      const email = req.session.email;
-      const newPassword = req.body.password;
+    const email = req.session.email;
+    const newPassword = req.body.password;
 
-      // console.log('Email:', email);
-      // console.log('New Password:', newPassword);
+    // console.log('Email:', email);
+    // console.log('New Password:', newPassword);
 
-      // Validate email and password
-      if (!email || !newPassword) {
-          return res.status(400).send('Email and password are required.');
-      }
+    // Validate email and password
+    if (!email || !newPassword) {
+      return res.status(400).send('Email and password are required.');
+    }
 
-      // Hash the new password
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      // console.log('Hashed Password:', hashedPassword);
+    // console.log('Hashed Password:', hashedPassword);
 
-      // Update the user's password in the database
-      const response = await Userdb.updateOne({ email: email.trim() }, { $set: { password: hashedPassword } });
+    // Update the user's password in the database
+    const response = await Userdb.updateOne({ email: email.trim() }, { $set: { password: hashedPassword } });
 
-      // console.log('Update Response:', response);
+    // console.log('Update Response:', response);
 
-      // Check if the update was successful
-      if (response) {
-          // Password reset successful
-          console.log('Password reset successful.');
-          return res.redirect('/signin');
-      } else {
-          // No user found with the provided email
-          console.log('User not found for the provided email.');
-          return res.status(404).send('User not found for the provided email.');
-      }
+    // Check if the update was successful
+    if (response) {
+      // Password reset successful
+      console.log('Password reset successful.');
+      return res.redirect('/signin');
+    } else {
+      // No user found with the provided email
+      console.log('User not found for the provided email.');
+      return res.status(404).send('User not found for the provided email.');
+    }
   } catch (error) {
-      console.error('Error resetting password:', error);
-      return res.status(500).send('Internal Server Error');
+    console.error('Error resetting password:', error);
+    return res.status(500).send('Internal Server Error');
   }
 };
 
@@ -458,13 +460,32 @@ exports.addAddress = async (req, res) => {
   try {
     const email = req.session.email;
 
+    // Trim the input values and check if they are empty
+    const Address = req.body.Address.trim();
+    const City = req.body.City.trim();
+    const HouseNo = req.body.House_No.trim();
+    const State = req.body.State.trim();
+    const AltrNumber = req.body.altr_number.trim();
+    const Postcode = req.body.postcode.trim();
+
+    if (
+      !Address ||
+      !City ||
+      !HouseNo ||
+      !State ||
+      !AltrNumber ||
+      !Postcode
+    ) {
+      return res.status(400).json({ error: "Please provide valid address information." });
+    }
+
     const newAddress = {
-      Address: req.body.Address,
-      City: req.body.City,
-      House_No: req.body.House_No,
-      State: req.body.State,
-      altr_number: req.body.altr_number,
-      postcode: req.body.postcode,
+      Address: Address,
+      City: City,
+      House_No: HouseNo,
+      State: State,
+      altr_number: AltrNumber,
+      postcode: Postcode,
       default: true
     };
 
@@ -491,7 +512,7 @@ exports.addAddress = async (req, res) => {
     // Access the _id from the result
     const id = result._id;
 
-    res.redirect(`/user-account-details?id=${id}`);
+    res.redirect('/user-address');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -524,7 +545,7 @@ exports.makeDefault = async (req, res) => {
     await user.save();
 
     // Redirect to the user account details page
-    res.redirect(`/user-account-details?id=${user._id}`);
+    res.redirect('/user-address');
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -557,15 +578,36 @@ exports.updateAddress = (req, res) => {
   const email = req.session.email;
   const id = req.query.id;
 
+  console.log(email, id);
+  console.log("Request Body:", req.body);
+  // Trim the input values and check if they are empty
+  const trimmedAddress = req.body.Address.trim();
+  const trimmedCity = req.body.City.trim();
+  const trimmedHouseNo = req.body.House_No.trim();
+  const trimmedState = req.body.State.trim();
+  const trimmedAltrNumber = req.body.altr_number.trim();
+  const trimmedPostcode = req.body.postcode.trim();
+
+  if (
+    !trimmedAddress ||
+    !trimmedCity ||
+    !trimmedHouseNo ||
+    !trimmedState ||
+    !trimmedAltrNumber ||
+    !trimmedPostcode
+  ) {
+    return res.status(400).send("Please provide valid address information.");
+  }
+
   // Extract the address fields from the request body
-  const updatedAddress = {
-    Address: req.body.Address,
-    City: req.body.City,
-    House_No: req.body.House_No,
-    State: req.body.State,
-    altr_number: req.body.altr_number,
-    postcode: req.body.postcode,
-  };
+  // const updatedAddress = {
+  //   Address: trimmedAddress,
+  //   City: trimmedCity,
+  //   House_No: trimmedHouseNo,
+  //   State: trimmedState,
+  //   altr_number: trimmedAltrNumber,
+  //   postcode: trimmedPostcode,
+  // };
 
   console.log("Email:", email);
   console.log("ID:", id);
@@ -573,7 +615,16 @@ exports.updateAddress = (req, res) => {
   // Use findOneAndUpdate to update the specific address in the array
   Userdb.findOneAndUpdate(
     { email: email, "address._id": id },
-    { $set: { "address.$": updatedAddress } },
+    {
+      $set: {
+        "address.$.Address": trimmedAddress,
+        "address.$.City": trimmedCity,
+        "address.$.House_No": trimmedHouseNo,
+        "address.$.State": trimmedState,
+        "address.$.altr_number": trimmedAltrNumber,
+        "address.$.postcode": trimmedPostcode
+      }
+    },
     { new: true } // Return the modified document
   )
     .then((updatedDocument) => {
@@ -667,24 +718,50 @@ exports.checkOut = (req, res) => {
 exports.loadcheckout = (req, res) => {
   const email = req.session.email;
   const totalprice = req.body.totalsum;
-  const index = req.query.id || 1;
+  const index = req.query.id;
   const prId = req.query.prId;
 
+  console.log("hello" + index);
+
   console.log(totalprice + "from checkot 2");
+
+  // Step 1: Find the user
   Userdb.findOne({ email: email })
+    .then((user) => {
+      // Step 2: Update the addresses array
+      user.address.forEach((address, i) => {
+        if (i === index) {
+          // Set the selected address as default
+          address.default = true;
+        } else {
+          // Set all other addresses as non-default
+          address.default = false;
+        }
+      });
+
+      // Step 3: Save the updated user data
+      return user.save();
+    })
+    .then((updatedUser) => {
+      // Step 4: Fetch the updated user data
+      return Userdb.findOne({ email: email });
+    })
     .then((userdata) => {
-      console.log(userdata);
+      // Step 5: Render the checkout page with the updated data
+      const selectedAddress = userdata.address[index];
       res.render("checkout", {
         prId: prId,
         users: userdata,
+        defaultAddress: selectedAddress,
         price: totalprice,
-          a: index,
+        a: index,
       });
     })
     .catch((err) => {
       res.send(err);
     });
 };
+
 
 exports.addAddressCheckout = async (req, res) => {
   try {
@@ -727,6 +804,147 @@ exports.addAddressCheckout = async (req, res) => {
 };
 
 
-exports.changepassword = (req,res)=>{
-  
-}
+exports.verifyPassword = async (req, res) => {
+  try {
+    const email = req.session.email;
+
+    console.log(email);
+    const oldPassword = req.body.password;
+
+    const user = await Userdb.findOne({ email: email });
+
+    if (user) {
+      console.log(user);
+      const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+
+      if (passwordMatch) {
+        // Passwords match, handle success (e.g., redirect or send a success response)
+        res.redirect('/change-password');
+      } else {
+        // Passwords do not match
+        req.session.notCorrect = true
+        res.redirect('/change-password/confirm')
+      }
+    } else {
+      // User not found
+      res.send("User not found");
+    }
+  } catch (err) {
+    // Handle other errors
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+exports.newPassword = async (req, res) => {
+  try {
+    const email = req.session.email;
+    const newPassword = req.body.password;
+    const confirmpassword = req.body.confirmpassword
+
+    // console.log('Email:', email);
+    // console.log('New Password:', newPassword);
+
+    // Validate email and password
+    if (!email || !newPassword) {
+      return res.status(400).send('Email and password are required.');
+    }
+    if (confirmpassword !== newPassword) {
+      return res.status(400).send('Password are not same.');
+    }
+
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+
+    const response = await Userdb.updateOne({ email: email }, { $set: { password: hashedPassword } });
+
+    console.log(response);
+
+    if (response) {
+      // Password reset successful
+      console.log('Password change successful.');
+
+      const user = await Userdb.findOne({ email: email })
+      const userId = user.id
+      res.redirect(`/user-account-details/?id=${userId}`)
+    } else {
+      // No user found with the provided email
+      console.log('User not found for the provided email.');
+      return res.status(404).send('User not found for the provided email.');
+    }
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    return res.status(500).send('Internal Server Error');
+  }
+};
+
+
+exports.ourstore  =(req,res)=>{
+  const email = req.session.email
+  const searchQuery = req.query.search
+  const catFilter = req.query.catFilter;
+  const min = req.query.min;
+  const max = req.query.max;
+  const page = req.query.page || 1;
+  const itemsPerPage = 6
+  const filter = { catStatus: true, active: true }; 
+
+  console.log("min"+min,"max"+max);
+
+
+  if (catFilter) {
+    filter.category = catFilter;
+  }
+
+
+  if (min && max) {
+    if(max>min){
+    filter.price = { $gte: parseInt(min), $lte: parseInt(max) };
+    }else{
+     req.session.priceError=true
+    }
+  } else if (min) {
+    filter.price = { $gte: parseInt(min) };
+  } else if (max) {
+    filter.price = { $lte: parseInt(max) }; 
+  }
+
+  if (searchQuery) {
+    filter.$or = [
+      { pname: { $regex: new RegExp(searchQuery, 'i') } },
+      { category: { $regex: new RegExp(searchQuery, 'i') } }
+    ];
+  }
+
+
+  productDb.find(filter)
+  .then(alldata=>{
+    console.log(alldata);
+   categorydb.find({active:true})
+       .then(data=>{
+           Userdb.findOne({email:email})
+           .then(userdata=>{
+            const totalProducts = alldata.length;
+            const totalPages = Math.max(1, Math.ceil(totalProducts / itemsPerPage));
+            const skipCount = (page - 1) * itemsPerPage;
+            const productdata = alldata.slice(skipCount, skipCount + itemsPerPage);
+               
+               res.render("ourStore",{email:email,
+                products:productdata,
+                categories:data,
+                users:userdata,
+                searchQuery,
+                catFilter,
+                min:min,
+                max:max,
+                currentPage: parseInt(page),  
+                totalPages: totalPages
+              })
+           })
+
+
+       })
+  })
+ }

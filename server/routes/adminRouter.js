@@ -39,7 +39,7 @@ router.get('/restore-product',middlewares.authenticateMiddleware,productControll
 router.get('/unlisted-product',middlewares.authenticateMiddleware,adminServices.restoreProduct)
 
 
-router.get('/order-details',middlewares.authenticateMiddleware,adminServices.yourOrders)
+router.get('/order-details/admin',middlewares.authenticateMiddleware,adminServices.yourOrders)
 router.post('/change-status',middlewares.authenticateMiddleware,orderController.changeStatus)
 
 //API

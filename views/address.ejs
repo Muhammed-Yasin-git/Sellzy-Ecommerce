@@ -124,7 +124,7 @@
                                         <% } %>
                                     <% } else { %>
                                         <div class="col-12">
-                                            <p>No addresses found. <a href="/Add-address">Add a new address</a></p>
+                                            <p>No addresses found. <a href="/Add-address"><i class="fa fa-plus mt-mb-3 me-md-2" ></i></a></p>
                                         </div>
                                     <% } %>
                                 </div>
@@ -216,7 +216,7 @@
         // Call the function to set modal data
         setModalData(addressIndex, addressId);
     });
-
+ 
     // Add a click event listener for the delete button
     $('.delete-button').on('click', function (event) {
         event.preventDefault(); // Prevent the default behavior of the anchor tag

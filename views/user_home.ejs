@@ -25,9 +25,25 @@ rel="stylesheet"
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+
+<link rel="icon" type="image/png" href="img/s.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=Jockey+One&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+
+
 
 </head>
-<body>
+<body style="background-color: #F0EEB3;">
     <!--Main Navigation-->
 <header>
     <!-- Jumbotron -->
@@ -126,7 +142,7 @@ rel="stylesheet"
             </li>
            
             <li class="nav-item">
-              <a class="nav-link text-dark space " href="#">STORE</a>
+              <a m class="nav-link text-dark space " href="/our-store">STORE</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark space href="#">BLOGS</a>
@@ -145,39 +161,41 @@ rel="stylesheet"
     </nav>
     <!-- Navbar -->
 </header>
-<div class="bg-primary text-white py-5 main-div" style="background-image: url('img/iphone.jpeg');background-size: cover; background-repeat: no-repeat;">
-    
-  <div class="container py-5">
-    <h1 style="color: #1D1C1B;">
-      Best products & <br />
-      brands in our store
-    </h1>
-    <p style="color: #1D1C1B;">
-      Trendy Products, Factory Prices, Excellent Service
-    </p>
-    <button type="button" class="btn ">
-      Learn more
-    </button>
-    <button type="button" class="btn ">
-      Purchase Now
-    </button>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="background-color: #F0EEB3;">
+
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+      aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+      aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+      aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+      aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4"
+      aria-label="Slide 5"></button>
   </div>
-</div>
-<!-- <div id="carouselExampleIndicators" class="carousel slide">
-   <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div> -->
- <!--<div class="carousel-inner">
+  <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="img/iphone.jpeg" style="aspect-ratio: 12/3 ;" class="d-block w-100" alt="...">
+      <img src="img/88.jpg" style="aspect-ratio: 12/4 ;" class="d-block w-100"
+        alt="...">
     </div>
     <div class="carousel-item">
-      <img src="img/56.jpg" style="aspect-ratio: 12/3;" class="d-block w-100" alt="...">
+      <img src="img/56.jpg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
     </div>
     <div class="carousel-item">
-      <img src="img/88.jpg" style="aspect-ratio: 12/3;" class="d-block w-100" alt="...">
+      <img src="img/iphone.jpeg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="img/12.jpg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="img/15.jpg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
@@ -188,31 +206,14 @@ rel="stylesheet"
   <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
     data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
+    <span id="kdjfwdwi" class="visually-hidden">Next</span>
   </button>
-    </div>  -->
-    
-  <!-- <div class="container py-5">
-    <h1 style="color: #1D1C1B;">
-      Best products & <br />
-      brands in our store
-    </h1>
-    <p style="color: #1D1C1B;">
-      Trendy Products, Factory Prices, Excellent Service
-    </p>
-    <button type="button" class="btn ">
-      Learn more
-    </button>
-    <button type="button" class="btn ">
-      Purchase Now
-    </button>
-  </div> -->
-
+</div>
 <!-- Jumbotron -->
 </header>
 <!-- Products -->
 <section>
-<div class="container my-5 main-div">
+<div class="container my-5 main-div " style="background-color: #F0EEB3;;">
   <header class="mb-4">
     <h3>New products</h3>
   </header>
@@ -325,6 +326,9 @@ rel="stylesheet"
 </div>
 </section>
 <script>
+
+// 
+
   function userdetails(id){
       const productDetailURL = `/product-details?productId=${id}`;
   

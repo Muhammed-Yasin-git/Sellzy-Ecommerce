@@ -43,50 +43,50 @@
                           <p class="mb-0">Address</p>
                           <div class="form-outline">
                             <input type="text" id="typeText" placeholder="Type here" class="form-control" name="Address" 
-                            value="<%= address[addressIndex].Address %>" />
+                            value="<%= address[addressIndex].Address %>" required/>
                           </div>
                         </div>
           
                         <div class="col-sm-4 mb-3">
                           <p class="mb-0">City</p>
                           <div class="form-outline">
-                            <input value="<%= address[addressIndex].City %>" type="text" id="typeText" name="City" placeholder="city" class="form-control" />
+                            <input value="<%= address[addressIndex].City %>" type="text" id="typeText" name="City" placeholder="city" class="form-control" required/>
                           </div>
                         </div>
 
                         <div class="col-sm-4 mb-3">
                             <p class="mb-0">State</p>
                             <div class="form-outline">
-                              <input type="text" id="typeText" name="State" placeholder="city" class="form-control" value="<%= address[addressIndex].State %>"/>
+                              <input type="text" id="typeText" name="State" placeholder="city" class="form-control" value="<%= address[addressIndex].State %>" required/>
                             </div>
                           </div>
           
                         <div class="col-sm-4 mb-3">
                           <p class="mb-0">House NO.</p>
                           <div class="form-outline">
-                            <input type="text" id="typeText" placeholder="Type here" name="House_No" class="form-control" value="<%= address[addressIndex].House_No %>"/>
+                            <input type="text" id="typeText" placeholder="Type here" name="House_No" class="form-control" value="<%= address[addressIndex].House_No %>" pattern="\d{2}" required/>
                           </div>
                         </div>
           
                         <div class="col-sm-4 col-6 mb-3">
                           <p class="mb-0">Postal code</p>
                           <div class="form-outline">
-                            <input type="text" id="typeText" name="postcode" class="form-control" value="<%= address[addressIndex].postcode %>" />
+                            <input type="text" id="typeText" name="postcode" class="form-control" value="<%= address[addressIndex].postcode %>" pattern="\d{6}" required />
                           </div>
                         </div>
           
                         <div class="col-sm-4 col-6 mb-3">
                           <p class="mb-0">Alternate Number</p>
                           <div class="form-outline">
-                            <input type="text" id="typeText" name="altr_number" class="form-control" value="<%= address[addressIndex].altr_number %>"/>
+                            <input type="text" id="typeText" name="altr_number" class="form-control" value="<%= address[addressIndex].altr_number %>" pattern="\d{10}" required/>
                           </div>
                         </div>
                       </div>
           
-                      <div class="form-check mb-3">
+                      <!-- <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" />
                         <label class="form-check-label" for="flexCheckDefault1">Save this address</label>
-                      </div>
+                      </div> -->
           
           
                       <div class="float-end">

@@ -1,5 +1,6 @@
 const Userdb = require("../model/usermodel")
 const productDb = require("../model/productsmodel")
+const categorydb = require("../model/categorymodel")
 const mongoose = require('mongoose');
 const orderdb = require("../model/ordermodel")
 
@@ -67,6 +68,7 @@ exports.userhomedetails = (req, res) => {
     Userdb.find({ _id: id })
         .then((userData) => {
             // console.log(userData);
+            
             res.render("userhomedetails", { users: userData[0] });
         })
         .catch((err) => {
@@ -125,6 +127,7 @@ exports.updateAddress = (req, res) => {
     const email = req.session.email;
   
     console.log(id);
+    console.log(email);
   
     Userdb.findOne({ email: email, "address._id": id })
       .then((data) => {
@@ -271,4 +274,33 @@ exports.returnReason = (req,res)=>{
     res.render("returnReason",{id:id})
     console.log(id);
 }
+exports.oldPassword = (req,res)=>{
+    const email = req.session.email
 
+    
+
+    res.render("oldpassword",{email:email,notCorrect:req.session.notCorrect})
+    
+}
+exports.changePassword = (req,res)=>{
+    const email = req.session.email
+
+    Userdb.findOne({email:email})
+    .then(user=>{
+        req.session.notCorrect = false
+        res.render("changePassword",{email:email})
+    })
+
+
+}
+
+exports.orderdetails  =(req,res)=>{
+    const userId = req.query.userId
+    const orderId = req.query.orderId
+
+    orderdb.find({_id:orderId})
+    .then(data=>{
+        res.render("orderDetails",{data:data})
+    })
+
+  }

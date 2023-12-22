@@ -163,9 +163,9 @@ exports.isAdmin = (req, res) => {
 
   exports.yourOrders  =(req,res)=>{
     const userId = req.query.userId
-    const id = req.query.id
+    const orderId = req.query.orderId
 
-    orderdb.find({_id:userId})
+    orderdb.find({_id:orderId})
     .then(data=>{
         res.render("orderDetails",{data:data})
     })

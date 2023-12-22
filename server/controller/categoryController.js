@@ -5,7 +5,7 @@ const cartDb = require("../model/cartmodel");
 exports.admincategory = (req, res) => {
 
   categorydb.find({ active: true }).then((data) => {
-    console.log(data);
+    // console.log(data);
     
     res.render("admincategory", { category: data });
   });
@@ -38,22 +38,29 @@ exports.deletecategory = (req, res) => {
   
     // Update catStatus to false in cartDb
     cartDb.updateMany({ category: categories }, { $set: { catStatus: false } })
-      .then(() => {
+      .then((cartUpdateResult) => {
+        console.log('Cart Update Result:', cartUpdateResult);
+  
         // Update category status in productdb
         return productdb.updateMany({ category: categories }, { $set: { catStatus: false } });
       })
-      .then(() => {
+      .then((productUpdateResult) => {
+        console.log('Product Update Result:', productUpdateResult);
+  
         // Update active status in categorydb
         return categorydb.updateOne({ name: categories }, { $set: { active: false } });
       })
-      .then(() => {
+      .then((categoryUpdateResult) => {
+        console.log('Category Update Result:', categoryUpdateResult);
+  
         res.redirect("/admin-category");
       })
       .catch((error) => {
-        console.error(error);
+        console.error('Error:', error);
         res.status(500).send("Internal Server Error");
       });
   };
+  
   
   exports.addcategory = (req, res) => {
     const categoryName = req.body.categoryName;
@@ -98,7 +105,7 @@ exports.unlistedcategory = (req, res) => {
 
 exports.restorecategory = (req, res) => {
   const categories = req.query.category;
-  console.log(categories);
+  console.log(categories +"hello");
 
   // Update catStatus to true in cartDb
   cartDb.updateMany({ category: categories }, { $set: { catStatus: true } })

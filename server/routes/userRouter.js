@@ -13,7 +13,8 @@ const orderController = require("../controller/orderController")
 
 router.get('/',userController.userHome)
 router.get('/signin',middlewares.checkNotAuthenticateuser,userServices.signin)
-router.get('/signup',middlewares.checkNotAuthenticateuser,userServices.signup)
+router.get('/signin',middlewares.checkNotAuthenticateuser,userServices.signin)
+router.get('/our-store',userController.ourstore)
 router.get('/verify',userServices.verify)
 
 
@@ -31,15 +32,19 @@ router.post('/make-default',userController.makeDefault)
 
 router.get('/edit-profile',middlewares.userCheckMiddleware,userServices.editprofile) 
 router.post('/update-profile',userController.updateprofile) 
-router.post('/change-password',userController.changepassword) 
+router.get('/change-password/confirm',userServices.oldPassword) 
+router.post('/verify-password',userController.verifyPassword) 
+router.get('/change-password',userServices.changePassword) 
+router.post('/new-password',userController.newPassword) 
 
 
 
 router.post('/checkout-page',userController.checkOut)
 router.get('/checkout-page',middlewares.userCheckMiddleware,userServices.checkOut)
 router.post('/checkout/address',userController.loadcheckout)
+
 router.get('/Add-address/checkout',middlewares.userCheckMiddleware,userServices.addAddresscheckout)
-router.post('/Add-address/checkout',userController.addAddressCheckout)
+router.post('/Add-address/checkout',userController.addAddressCheckout) 
 
 
 
@@ -52,6 +57,7 @@ router.get('/return-order',userServices.returnOrder)
 router.get('/api/return/reason',userServices.returnReason)
 router.post('/return-reason',orderController.return)
 
+router.get('/order-details',userServices.orderdetails)
 
 
 
