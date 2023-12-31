@@ -99,6 +99,7 @@ module.exports = {
   
                   // Step 9: Accumulate the total price without discount inside the loop
                   totalsumWithoutDiscount += (product.price * cartItem.cartQuantity);
+                  req.session.totalSum = sum;
                 })
                 .catch(err => {
                   console.error('Error finding cart item:', err);

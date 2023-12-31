@@ -407,7 +407,7 @@ rel="stylesheet"
                           <% if(users){ %>
                           <a class="btn  shadow-0"
                           style="background-color: rgba(229, 211, 41, 0.61); ;  font-weight: bolder; border-radius: 30px; height: 40px; margin-left: -15px; margin-bottom: -20px;">
-                          <form  method="post" action="/checkout?prId=<%=products[i]._id %>" style="margin-top: -2px;">
+                          <form  method="post" action="/checkout-page?prId=<%=products._id%>" style="margin-top: -2px;">
                             <%let prPrice=Math.floor(showPrice)  %>
                             <input type="number" name="totalsum" value="<%=prPrice %>" hidden>
                             <button type="submit" style="margin-top: -5%; background-color: transparent;border: none; color: rgb(0, 0, 0); font-size: 15px;  font-weight: 500;"> Buy

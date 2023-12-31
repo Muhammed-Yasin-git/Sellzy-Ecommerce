@@ -44,7 +44,7 @@
                             <div class="p-4">
                                 <h5 class="card-title mb-3">checkout</h5>
                                 <div class="row">
-                                    <form id="checkoutForm" action="/submit-order?prId=<%=prId%>" method="post">
+                                    <form id="checkoutForm1">
 
                                         
                                             <div class="col-6">
@@ -161,13 +161,14 @@
                                                         <div class="col-lg-9">
                                                             <div class="accordion" id="accordionPayment">
                                                                 <!-- Credit card -->
-                                                                <div class="accordion-item mb-3">
-                                                                    <h2 class="h5 px-4 py-3 accordion-header">
-                                                                        <div class="form-check w-100" data-bs-toggle="collapse" data-bs-target="#collapseCC"
+                                                                <div class="mb-3">
+                                                                    <h2 class="h5 px-4 py-3 ">
+                                                                        
+                                                                        <div class data-bs-toggle="collapse" data-bs-target="#collapseCOD"
                                                                             aria-expanded="false">
-                                                                            <input class="form-check-input pay-form" type="radio" name="payment" id="flexCheckDefault1"
-                                                                                onclick="handlePaymentSelection('credit-card')">
-                                                                            <label class="form-check-label pt-1" for="payment1" value="online_payment">Credit Card</label>
+                                                                            <input class="form-check-input" type="radio" name="payment" id="payment" value="Online_Payment">
+                                                                                
+                                                                            <label class="form-check-label pt-1" for="onlinePayment" >Online Payment</label>
                                                                         </div>
                                                                     </h2>
                                                                     <div id="collapseCC" class="accordion-collapse collapse" data-bs-parent="#accordionPayment">
@@ -177,13 +178,13 @@
                                                                     </div>
                                                                 </div>
                                                                 <!-- PayPal -->
-                                                                <div class="accordion-item mb-3">
-                                                                    <h2 class="h5 px-4 py-3 accordion-header">
+                                                                <div class=" mb-3">
+                                                                    <h2 class="h5 px-1 py-3 ">
                                                                         <div class="form-check w-100" data-bs-toggle="collapse" data-bs-target="#collapseCOD"
                                                                             aria-expanded="false">
-                                                                            <input class="form-check-input" type="radio" name="payment" id="payment2"
+                                                                            <input class="form-check-input" type="radio" name="payment" id="payment2" value="COD">
                                                                                 
-                                                                            <label class="form-check-label pt-1" for="payment2" value="COD">Cash On Delivery (COD)</label>
+                                                                            <label class="form-check-label pt-1" for="payment2" >Cash On Delivery (COD)</label>
                                                                         </div>
                                                                     </h2>
                                                                     
@@ -196,8 +197,8 @@
 
                                                         <input type="text" hidden name="totalsum"
                                                             value="<%=price%>">
-                                        <button type="button" class="btn shadow-0 border" style="color: antiquewhite; background-color: #232F3E;"
-                                         data-bs-toggle="modal" data-bs-target="#confirmationModal">Continue</button>
+                                        <button type="submit" class="btn shadow-0 border"
+                                         style="color: antiquewhite; background-color: #232F3E;">Continue</button>
 
                                                     </div>
                                                 </div>
@@ -244,25 +245,7 @@
 
 
 
-                                    <!-- Confirmation Modal -->
-                                    <div class=" modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure you want to proceed with the payment?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-success" onclick="confirmPayment()">Confirm</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
+                                   
                                     
 
 
@@ -356,14 +339,13 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-<script>
-    function confirmPayment() {
-        // Add logic to handle the confirmation, e.g., submit the form
-        document.forms["checkoutForm"].submit(); // Assuming your form has the id "checkoutForm"
-    }
-</script>
 
-<script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script> 
+
+
+<!-- <script>
   
     $(document).ready(function () {
       $('.btn-secondary').on('click', function () {
@@ -371,8 +353,74 @@
         $(this).closest('form').submit();
       });
     });
-  </script>
+  </script> -->
+<script>
+    $(document).ready(function(){
+       
+        $('#checkoutForm1').submit(function(e){
+            e.preventDefault()
+            
+            
+            var formData = $(this).serialize();
 
+            $.ajax({
+                url:`/submit-order?prId=${'<%=prId%>'}`,
+                type:"POST",
+                data:formData,
+                success: (response)=>{
+                    if(response.url){
+                         window.location.href = response.url
+                         console.log(response.url);
+                    }
+                    if(response.razorSuccess){
+                        
+                        razorpayPayment(response)
+                    }
+                }
+            })
+        })
+    })
 
+    function razorpayPayment(order){
+                    
+                        var options = {
+                                "key": "rzp_test_bGthgwbzA74CwJ", // Enter the Key ID generated from the Dashboard
+                                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                "currency": "INR",
+                                "name": "SELLZY",
+                                "description": "Test Transaction",
+                                "image": "images/s.png",
+                                "order_id": order.razorpay_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                "handler": function (response){
+                                    $.ajax({
+                                        url:`/payment-success?prId${'<%=prId%>'}`,
+                                        method:"POST",
+                                        data:{
+                                            order:order,
+                                            paymentResponse: response
+                                        },
+                                        success:(response)=>{
+                                            window.location.href = response
+                                        }
+                                    })
+                                },
+                                "prefill": {
+                                    "name": "SELLZY",
+                                    "email": "sellzy09@gmail.com",
+                                    "contact": "8301998370"
+                                },
+                                "notes": {
+                                    "address": "Razorpay Corporate Office"
+                                },
+                                "theme": {
+                                    "color": "#3b71ca"
+                                }
+                            };
+                            var rzp = new Razorpay(options);
+                            
+                            rzp.open();
+                    
+                }
+</script>
 
 </html>

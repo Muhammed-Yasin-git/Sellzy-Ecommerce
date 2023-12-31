@@ -715,52 +715,54 @@ exports.checkOut = (req, res) => {
     });
 };
 
-exports.loadcheckout = (req, res) => {
-  const email = req.session.email;
-  const totalprice = req.body.totalsum;
-  const index = req.query.id;
-  const prId = req.query.prId;
+exports.loadcheckout = async (req, res) => {
+  try {
+    const email = req.session.email;
+    const totalprice = req.body.totalsum;
+    const index = req.query.id;
+    const prId = req.query.prId;
 
-  console.log("hello" + index);
+    console.log("hello" + index);
+    console.log(totalprice + "from checkout 2");
 
-  console.log(totalprice + "from checkot 2");
+    // Find the user
+    const user = await Userdb.findOne({ email: email });
 
-  // Step 1: Find the user
-  Userdb.findOne({ email: email })
-    .then((user) => {
-      // Step 2: Update the addresses array
-      user.address.forEach((address, i) => {
-        if (i === index) {
-          // Set the selected address as default
-          address.default = true;
-        } else {
-          // Set all other addresses as non-default
-          address.default = false;
-        }
-      });
-
-      // Step 3: Save the updated user data
-      return user.save();
-    })
-    .then((updatedUser) => {
-      // Step 4: Fetch the updated user data
-      return Userdb.findOne({ email: email });
-    })
-    .then((userdata) => {
-      // Step 5: Render the checkout page with the updated data
-      const selectedAddress = userdata.address[index];
-      res.render("checkout", {
-        prId: prId,
-        users: userdata,
-        defaultAddress: selectedAddress,
-        price: totalprice,
-        a: index,
-      });
-    })
-    .catch((err) => {
-      res.send(err);
+    // Update the addresses array
+    user.address.forEach((address, i) => {
+      address.default = i === index; // Set the selected address as default
     });
+
+    // Explicitly set default for the selected address
+    user.address[index].default = true;
+
+    console.log("Updated user.address:", user.address);
+
+    // Save the updated user data
+    await user.save();
+
+    // Fetch the updated user data
+    const userdata = await Userdb.findOne({ email: email });
+
+    console.log("Updated user data:", userdata);
+
+    // Render the checkout page with the updated data
+    const selectedAddress = userdata.address[index];
+    console.log("Selected address:", selectedAddress);
+
+    res.render("checkout", {
+      prId: prId,
+      users: userdata,
+      defaultAddress: selectedAddress,
+      price: totalprice,
+      a: index,
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    res.send(err);
+  }
 };
+
 
 
 exports.addAddressCheckout = async (req, res) => {

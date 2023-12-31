@@ -31,12 +31,16 @@
                                         </div>
                                         <div class="col-2 d-flex align-items-center">
                                             <% if (data[i].status === 'Returned') { %>
-                                                <button class="btn btn-dark" >Returned</button>
+                                                <button class="btn btn-dark" disabled>Returned</button>
                                             <% } else if (data[i].status === 'Delivered') { %>
                                                 <a href="/return-order?orderId=<%= data[i]._id %>">
-                                                    <button class="btn btn-warning" id="returnButton_<%= i %>_<%= j %>">Return</button>
+                                                    <button class="btn btn-warning" id="returnButton_<%= i %>_<%= j %>" disabled>Return</button>
                                                 </a>
-                                            <% } else if (data[i].status !== 'Cancelled') { %>
+                                            <% } else if (data[i].status === 'Shipped') { %>
+                                                
+                                                    <button class="btn btn-warning" id="returnButton_<%= i %>_<%= j %>" disabled>Return</button>
+                                                </a>
+                                            <% }else if (data[i].status !== 'Cancelled') { %>
                                                 <a href="/cancel-order?orderId=<%= data[i]._id %>">
                                                     <button class="btn btn-outline-primary" id="cancelButton_<%= i %>_<%= j %>">Cancel</button>
                                                 </a>

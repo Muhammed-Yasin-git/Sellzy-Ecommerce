@@ -304,3 +304,27 @@ exports.orderdetails  =(req,res)=>{
     })
 
   }
+exports.orderSuccess  =(req,res)=>{
+   const orderId = req.query.id
+
+    
+     console.log(orderId);
+
+    orderdb.find({_id:orderId})
+    .then(data=>{
+        res.render("orderSuccess",{data:data})
+    })
+
+  }
+exports.paymentSuccess  =(req,res)=>{
+   const orderId = req.query.id
+
+    
+     console.log(orderId);
+
+    orderdb.find({_id:orderId})
+    .then(data=>{
+        res.render("orderSuccess",{data:data})
+    })
+
+  }

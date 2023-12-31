@@ -58,6 +58,8 @@ router.get('/api/return/reason',userServices.returnReason)
 router.post('/return-reason',orderController.return)
 
 router.get('/order-details',userServices.orderdetails)
+router.get('/order-success',userServices.orderSuccess)
+router.post('/payment-success',orderController.paymentSuccess)
 
 
 

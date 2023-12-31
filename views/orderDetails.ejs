@@ -26,6 +26,8 @@ rel="stylesheet"
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Afacad">
 
 </head>
     <!-- Add your CSS and Bootstrap links here -->
@@ -39,7 +41,7 @@ rel="stylesheet"
                     <% data[0].products.forEach(product => { %>
                         <div class="card mb-4">
                             <div class="card-header">
-                                <h5>Order ID: <%= data[0].id %></h5>
+                                <h5 >Order ID: <span style="color: crimson ;"><%= data[0].id %></span></h5>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -47,11 +49,36 @@ rel="stylesheet"
                                         <img src="images/<%= product.prd_image[0] %>" class="card-img" alt="">
                                     </div>
                                     <div class="col-md-8 ">
-                                        <h5 class="card-title"><%= data[0].products[0].pname %></h5>
-                                        <p class="card-text"><span style="font-weight: bolder;">Category:</span> <%= data[0].products[0].category %></p>
-                                        <p class="card-text"><span style="font-weight: bolder;">Price:</span> ₹<%= data[0].price %></p>
+                                        <h5 class="mb-4" style="font-size: 30px; font-weight: bolder; font-family:'Afacad';"><%= data[0].products[0].pname %></h5>
                                         
-                                        <p class="card-text"><span style="font-weight: bolder;">Description:</span> <%= data[0].products[0].description %></p>
+                                        <p class="card-text"><span style="font-weight: bolder;">Category:</span> <%= data[0].products[0].category %></p>
+                                        <p class="card-text" style="font-weight: bolder;"><span style="font-weight: bolder;">Price:</span> ₹<%= (data[0].products[0].price) * (1 - data[0].products[0].discount / 100) %></p>
+
+                                        
+                                        <p class="card-text"><span style="font-weight: bolder;">Payment Method:</span> <%= data[0].PaymentMethod%></p>
+
+                                        <% const utcTimestamp = data[0].orderDate; %>
+                                        <% const options = { timeZone: "Asia/Kolkata" }; %>
+                                        <% const istDateTimeString = new Date(utcTimestamp).toLocaleString("en-IN", options); %>
+                                        <p class="card-text"><span style="font-weight: bolder;">Order Placed At:</span> <%= istDateTimeString%></p>
+                                     
+                                        <p class="card-text">
+                                            <span style="font-weight: bolder;">Status:</span> 
+                                            <% if (data[0].status === 'pending') { %>
+                                                <span style="color: green; font-weight: bolder; font-family:'Afacad';">Ordered </span>  <i class="fas fa-check-circle" style="color: green;"></i>  
+                                            <% } else if (data[0].status === 'Delivered') { %>
+                                              <span style="color: green; font-weight: bolder; font-family:'Afacad';">Delivered </span>   <i class="fas fa-check-circle" style="color: green;"></i> 
+                                            <% } else if (data[0].status === 'Cancelled') { %>
+                                                <span class="text-danger" style=" font-weight: bolder; font-family:'Afacad';">Cancelled </span><i class="fas fa-times-circle" style="color: red;"></i> 
+                                            <% } else if (data[0].status === 'Shipped') { %>
+                                                <span class="text-primary" style=" font-weight: bolder; font-family:'Afacad';">Shipped </span><i class="fa-solid fa-truck-fast text-primary" ></i>
+                                            <% } else if (data[0].status === 'Returned') { %>
+                                                <span style="color: rgb(136, 4, 4); font-weight: bolder; font-family:'Afacad';">Returned </span><i class="fas fa-times-circle" style="color: rgb(136, 4, 4);"></i> 
+                                            <% }else { %>
+                                                <%= data[0].status %>
+                                            <% } %>
+                                        </p>
+                                       
                                         
                                     </div>
                                 </div>

@@ -18,6 +18,7 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
     
     <title>Admin Orders</title>
@@ -66,7 +67,7 @@
                     <i class='bx bx-search'></i>
                     <i class='bx bx-filter'></i>
                 </div>
-                <table>
+                <table id="orderTable">
                     <thead>
                         <tr>
                             <th>User</th>
@@ -102,7 +103,7 @@
                                     <% } else if (data[i].status == 'Returned') { %>
                                         <td><span class="status" style="background-color: brown;"><%= data[i].status %></span></td>
                                     <% } %>
-                                    <td>
+                                    <td style="padding-left: 5%;">
                                         <i class="fa-regular fa-pen-to-square" data-toggle="modal" data-target="#exampleModal<%= data[i]._id %>_<%= j %>"></i>
                                     
                                    
@@ -179,6 +180,18 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+      $('#orderTable').DataTable({
+        "paging": true,       // Enable pagination
+        "pageLength": 10      // Set the number of rows per page
+      });
+    });
+  </script>
+
+
 
 <script src="js/adminbase.js"></script>
 </body>

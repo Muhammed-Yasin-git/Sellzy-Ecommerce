@@ -11,10 +11,35 @@ exports.adminlogin = (req,res)=>{
     res.render("admin_login",{isAdminCheck:req.session.isAdminCheck})
 }
 
-exports.admindash = (req,res)=>{
+exports.admindash = async (req, res) => {
     req.session.isAdminCheck = false;
-    res.render("admin_dash")
-}
+    try {
+      const totalOrder = await orderdb.find({}).count();
+      const amountOfUsers = await Userdb.find({}).count();
+      const totalSales = await orderdb.aggregate([
+        { $group: { _id: null, sum: { $sum: "$price" } } },
+      ]);
+  
+      const totalSalesAmount = totalSales.length > 0 ? totalSales[0].sum : 0;
+  
+      // You can format totalSalesAmount here if needed
+  
+      // const latestOrders = await orderDb.find().sort({ createdAt: -1 }).limit(5);
+  
+      res.render("admin_dash", {
+        totalOrder,
+        amountOfUsers,
+        totalSalesAmount,
+        // latestOrders
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  };
+  
+
+
 exports.adminOrder = async  (req,res)=>{
     email = req.session.email
 

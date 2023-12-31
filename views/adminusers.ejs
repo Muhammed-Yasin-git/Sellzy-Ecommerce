@@ -18,6 +18,7 @@ rel="stylesheet"
 />
 
 <link rel="stylesheet" href="css/admindash.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
 
 	<!-- CONTENT -->
@@ -35,19 +36,9 @@ rel="stylesheet"
                 <div class="order">
                     <div class="head">
                         <h3>Users</h3>
-                        <div >
-                          <label for="name" class="text-dark">Search Here</label>
-                      <input type="text" name="name" placeholder="Search Here " id="name-search"  style="width: 40%;
-                      padding: .6em 1em;
-                      margin: .5em 0;
-                      border: 1px solid black;
-                      font-family: 'Barlow', sans-serif;
-                      font-size: 1em;
-                      border-radius: .2em;">
-                     
-                      </div>
+                        
                     </div>
-                    <table>
+                    <table id="orderTable">
                         <thead>
                             <tr>
                                 <th>&nbsp;</th>
@@ -55,6 +46,7 @@ rel="stylesheet"
                                 <th>User</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -98,10 +90,39 @@ rel="stylesheet"
   }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
   <script src="js/adminserver.js"></script>
   <!-- CONTENT -->
 	<script src="js/new.js"></script>
  
+  <script>
+   $(document).ready(function () {
+    // Initialize DataTables
+    var table = $('#orderTable').DataTable({
+        "paging": true,       // Enable pagination
+        "pageLength": 10,     // Set the number of rows per page
+        "columnDefs": [
+            { "width": "5%", "targets": [0] },
+            { "width": "5%", "targets": [1] },
+            { "width": "24%", "targets": [2] },
+            { "width": "35%", "targets": [3] },
+            { "width": "20%", "targets": [4] },
+            { "width": "25%", "targets": [5] },
+            { "width": "25%", "targets": [6] }
+        ]
+    });
+
+    // When the user types in the search box
+    $("#name-search").on("keyup", function () {
+        var searchText = $(this).val().toLowerCase();
+
+        // Use DataTables search API to filter rows
+        table.search(searchText).draw();
+    });
+});
+
+  </script>
+  
 <script>
     function userdetails(id){
       const userURL = `/user-details?userid=${id}`

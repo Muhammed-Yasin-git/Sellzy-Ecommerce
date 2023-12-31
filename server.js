@@ -4,6 +4,8 @@ const path = require("path")
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const connectDB = require('./server/database/connection');
+const morgan = require("morgan");
+
 
 
 const app = express()
@@ -12,6 +14,8 @@ const app = express()
 const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(morgan('tiny'))
 
 
 app.use(session({
