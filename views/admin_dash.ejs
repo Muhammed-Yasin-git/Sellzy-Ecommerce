@@ -1,10 +1,12 @@
 <!-- include footer -->
 <%- include('include/_adminbase.ejs') %>
 <!-- /include footer -->
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
 
 	<!-- CONTENT -->
-	<section id="content">
+	<section id="content" style="background-color: #eee;;">
 		<!-- NAVBAR -->
 		
 		<!-- NAVBAR -->
@@ -16,7 +18,8 @@
 					<h1>Dashboard</h1>
 					<ul class="breadcrumb">
 						<li>
-							<a href="#">Dashboard</a>
+							<a href="#" style="all: unset;">Dashboard</a>
+
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
@@ -35,32 +38,124 @@
 					<i class='bx bxs-calendar-check' ></i>
 					<span class="text">
 						<h3><%= totalOrder %></h3>
-						<p>Total Order</p>
+						<p>Total Orders</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group' ></i>
 					<span class="text">
 						<h3><%=amountOfUsers%></h3>
-						<p>Visitors</p>
+						<p>Total Users</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-dollar-circle' ></i>
 					<span class="text">
-						<h3>₹<%=totalSalesAmount%></h3>
+						<h3>₹<%=totalSalesAmount.toLocaleString('en-IN')%></h3>
+
 						<p>Total Sales</p>
 					</span>
 				</li>
 			</ul>
 
-
+			<div class="form-group">
+				<label for="timeInterval">Select Time Interval:</label>
+				<select class="form-control" style="width: 150px;" id="timeInterval">
+				  <option value="Yearly">Yearly</option>
+				  <option value="Monthly">Monthly</option>
+				  <option value="Weekly">Weekly</option>
+				  <option value="Daily">Daily</option>
+				</select>
+			  </div>
+   
+  
+		<canvas id="ordersChart" width="1300" height="600"></canvas>
+  
+			<div>
 			
 		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
 	
+	  
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+	window.addEventListener("load", () => {
+		// Variable to store the chart instance
+		let ordersChart;
+
+		// Function to fetch and update chart data
+		const updateChartData = (filter) => {
+			$.ajax({
+				url: '/api/getDetailsChart',
+				method: 'POST',
+				data: { filter },
+				success: function (data) {
+					console.log(data);
+
+					var orderData = {
+						labels: data.label,
+						datasets: [{
+							label: 'Number of Orders',
+							data: data.salesCount,
+							borderColor: 'rgba(75, 192, 192, 1)',
+							backgroundColor: 'rgba(75, 192, 192, 0.5)',
+							borderWidth: 2,
+							fill: false
+						}]
+					};
+
+					var ctx = document.getElementById('ordersChart').getContext('2d');
+
+					// Destroy the previous chart instance (if it exists)
+					if (ordersChart) {
+						ordersChart.destroy();
+					}
+
+					ordersChart = new Chart(ctx, {
+						type: 'bar',
+						data: orderData,
+						options: {
+							scales: {
+								xAxes: [{
+									type: 'category',
+									labels: orderData.labels
+								}],
+								yAxes: [{
+									beginAtZero: true,
+									scaleLabel: {
+										display: true,
+										labelString: 'Number of Orders'
+									}
+								}]
+							}
+						}
+					});
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching chart data:', error);
+				}
+			});
+		};
+
+		// Initial data load (assuming 'monthly' as default)
+		updateChartData('Monthly');
+
+		// Event listener for the select button (dropdown)
+		let timeInterval = document.getElementById("timeInterval");
+		timeInterval.addEventListener("change", () => {
+			// Fetch and update data when the dropdown changes
+			updateChartData(timeInterval.value);
+		});
+	});
+</script>
+
+
+
+	
 </body>
 </html>

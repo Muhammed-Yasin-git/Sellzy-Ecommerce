@@ -162,7 +162,7 @@ rel="stylesheet"
           <!-- <td>
             <p class="fw-normal mb-1"><%=products[i].description%></p>
           </td> -->
-          <td style="color: rgb(224, 10, 10); font-weight: 600;">₹<%= products[i].price-(products[i].price * (products[i].discount / 100)) %></td>
+          <td style="color: rgb(224, 10, 10); font-weight: 600;">₹<%= (products[i].price-(products[i].price * (products[i].discount / 100))).toLocaleString('en-IN') %></td>
 
           <td><span style="color: green; font-weight: 600"><%=products[i].stock%></span> stocks left</td>
           <td>

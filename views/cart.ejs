@@ -69,8 +69,8 @@
                       <div class="">
                         <% const discount = cart[i].discount %>
                         <% const disPrice = cart[i].price - (cart[i].price * discount / 100) %>
-                        <text class="h6">₹ <%= cart[i].cartQuantity * disPrice %></text> <br />
-                        <small class="text-muted text-nowrap">₹ <%= disPrice %>/ per item </small>
+                        <text class="h6">₹ <%= (cart[i].cartQuantity * disPrice).toLocaleString('en-IN') %></text> <br />
+                        <small class="text-muted text-nowrap">₹ <%= disPrice.toLocaleString('en-IN') %>/ per item </small>
                         
                         
                       </div>
@@ -129,7 +129,8 @@
                 <div class="d-flex justify-content-between">
                     <p class="mb-2"  style="font-size: 14px;">Total price (before discount)</p>
                     <p class="mb-2 " id="total-price-before" style="font-weight: bold; ">
-                        ₹<%= totalsumWithoutDiscount.toFixed(2) %>
+                      ₹<%= totalsumWithoutDiscount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+
                     </p>
                 </div>
                 
@@ -142,14 +143,14 @@
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total Discount</p>
                 <p class="mb-2 text-danger">
-                    - ₹<%= totalDiscount.toFixed(2) %>
+                    - ₹<%= totalDiscount.toLocaleString('en-IN',{ minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
                 </p>
               </div>
               <hr />
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total price:</p>
                 <p class="mb-2 fw-bold" id="total-price">
-                    ₹<%= totalsum %>
+                    ₹<%= totalsum.toLocaleString('en-IN') %>
                 </p>
               </div>
               

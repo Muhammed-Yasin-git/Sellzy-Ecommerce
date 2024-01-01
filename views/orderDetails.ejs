@@ -52,7 +52,7 @@ rel="stylesheet"
                                         <h5 class="mb-4" style="font-size: 30px; font-weight: bolder; font-family:'Afacad';"><%= data[0].products[0].pname %></h5>
                                         
                                         <p class="card-text"><span style="font-weight: bolder;">Category:</span> <%= data[0].products[0].category %></p>
-                                        <p class="card-text" style="font-weight: bolder;"><span style="font-weight: bolder;">Price:</span> ₹<%= (data[0].products[0].price) * (1 - data[0].products[0].discount / 100) %></p>
+                                        <p class="card-text" style="font-weight: bolder;"><span style="font-weight: bolder;">Price:</span> ₹<%= ((data[0].products[0].price) * (1 - data[0].products[0].discount / 100)).toLocaleString('en-IN') %></p>
 
                                         
                                         <p class="card-text"><span style="font-weight: bolder;">Payment Method:</span> <%= data[0].PaymentMethod%></p>
@@ -60,7 +60,13 @@ rel="stylesheet"
                                         <% const utcTimestamp = data[0].orderDate; %>
                                         <% const options = { timeZone: "Asia/Kolkata" }; %>
                                         <% const istDateTimeString = new Date(utcTimestamp).toLocaleString("en-IN", options); %>
-                                        <p class="card-text"><span style="font-weight: bolder;">Order Placed At:</span> <%= istDateTimeString%></p>
+                                        <p class="card-text">
+                                            <span style="font-weight: bolder;">Order Placed On:</span> <%= new Date(utcTimestamp).toLocaleDateString("en-IN", options)%>
+                                        </p>
+                                        <p class="card-text">
+                                            <span style="font-weight: bolder;">Order Placed At:</span> <%= new Date(utcTimestamp).toLocaleTimeString("en-IN", options)%>
+                                        </p>
+                                        
                                      
                                         <p class="card-text">
                                             <span style="font-weight: bolder;">Status:</span> 

@@ -73,11 +73,12 @@
 
             <div class="mb-3">
               <p class="card-text " style="color: green; padding: 0%; margin-bottom: 3%; font-weight: bolder;">-<%=products.discount%>% off</p>
-              <p class="card-text " style="color: rgb(0, 0, 0); padding: 0%; margin: 0%; text-decoration: line-through;">₹<%= products.price %></p>
+              <p class="card-text " style="color: rgb(0, 0, 0); padding: 0%; margin: 0%; text-decoration: line-through;">₹<%= products.price.toLocaleString('en-IN') %></p>
             </div>
             <div class="mb-3">
               <span class="h5" style="color: crimson;">
-                ₹<%= products.price-(products.price * (products.discount / 100)) %>
+                ₹<%= (products.price - (products.price * (products.discount / 100))).toLocaleString('en-IN') %>
+
               </span>
               <span  style="color: #443d3d;">/per box</span>
             </div>

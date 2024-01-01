@@ -248,9 +248,9 @@ rel="stylesheet"
                     <% var Odiscount = products[i].price * discount / 100 %>
                     <% var showPrice= products[i].price-Odiscount %>
                 
-                  <p class="card-text" style="margin-left: -8px; font-weight: bolder; font-size: 20px;">₹<%=Math.floor(showPrice)  %>
+                  <p class="card-text" style="margin-left: -8px; font-weight: bolder; font-size: 20px;">₹<%=Math.floor(showPrice).toLocaleString('en-IN')  %>
                       <span
-                        style="font-size: 10px; text-decoration: line-through; font-weight: bolder; opacity: .7;">₹<%=products[i].price %></span>
+                        style="font-size: 10px; text-decoration: line-through; font-weight: bolder; opacity: .7;">₹<%=products[i].price.toLocaleString('en-IN') %></span>
                   </p>
 
                   

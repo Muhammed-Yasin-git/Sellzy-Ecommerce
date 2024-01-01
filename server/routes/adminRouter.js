@@ -41,6 +41,7 @@ router.get('/unlisted-product',middlewares.authenticateMiddleware,adminServices.
 
 router.get('/order-details/admin',middlewares.authenticateMiddleware,adminServices.yourOrders)
 router.post('/change-status',middlewares.authenticateMiddleware,orderController.changeStatus)
+router.post('/api/getDetailsChart',middlewares.authenticateMiddleware,adminController.chartData)
 
 //API
 router.get('/add-category',adminServices.addcategory)
