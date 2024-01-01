@@ -38,20 +38,34 @@ exports.admindash = async (req, res) => {
     }
   };
   
-
+ 
 
 exports.adminOrder = async  (req,res)=>{
     email = req.session.email
 
     orderdb.find()
     .then(data=>{
-        // console.log(data);
+        console.log(data);
         // console.log(data[data.length - 1].products);
-        res.render("adminOrder",{data:data})
+        res.render("adminOrder",{data:data,products:data[0].products})
     })
 
     
 }
+
+exports.adminOrderDetails  =(req,res)=>{
+    const userId = req.query.userId
+    const orderId = req.query.orderId
+
+    orderdb.find({_id:orderId})
+    .then(data=>{
+        console.log(data);
+        res.render("adminOrderDetails",{data:data})
+    })
+
+  }
+
+
 exports.addcategory = (req,res)=>{
     res.render("addcategory")
 }

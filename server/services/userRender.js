@@ -300,6 +300,7 @@ exports.orderdetails  =(req,res)=>{
 
     orderdb.find({_id:orderId})
     .then(data=>{
+        console.log(data);
         res.render("orderDetails",{data:data})
     })
 

@@ -37,6 +37,7 @@ router.get('/unlist-product',middlewares.authenticateMiddleware,productControlle
 router.get('/delete-product',middlewares.authenticateMiddleware,productController.deleteProduct)
 router.get('/restore-product',middlewares.authenticateMiddleware,productController.restoreProduct)
 router.get('/unlisted-product',middlewares.authenticateMiddleware,adminServices.restoreProduct)
+router.get('/admin/order-details',middlewares.authenticateMiddleware,adminServices.adminOrderDetails)
 
 
 router.get('/order-details/admin',middlewares.authenticateMiddleware,adminServices.yourOrders)
