@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELLZY</title>
+    <link rel="icon" href="img/s.png">
+    <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/admindash.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELLZY</title>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/admindash.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+</head>
+
+</head>
+
+<!-- include footer -->
+<%- include('include/_adminbase.ejs') %>
+<!-- /include footer -->
+
+    <section>
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-lg-8 col-md-8 ml-auto" style="margin-left: 25%; margin-top: -5%;">
+                    <div class="row align-items-center pt-md-5  mb-5">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-title text-center mt-3">
+                                    <h3 style="margin-top: 1%;">Update Product</h3>
+                                </div>
+
+                            
+
+                                <div class="card-body">
+                                    <form action="/api/update-product" method="POST" enctype="multipart/form-data">
+
+                                        <div class="form-group">
+                                            <label   for="productId" style="display: none;"><%=products._id%></label>
+                                            <input type="text" name="productId" class="form-control" id="productId" value="<%=products._id%>" style="display: none;">
+
+                                            <!-- <div class="invalid-feedback">Product ID Can't Be Empty</div> -->
+                                        </div>
+                                        <div class="form-group">
+                                            <label  class="mb-2"for="productName">Product Name</label>
+                                            <input type="text" name="productName" class="form-control" id="productName" value="<%=products.pname%>"required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                          <label class="mb-2 mt-2" for="productname">Description</label>
+                                          <textarea name="description" class="form-control" id="productname" placeholder="Enter Product Description" rows="4" required><%= products.description %></textarea>
+                                      </div>
+                                      
+                                        <div class="form-group">
+                                            <label class="mb-2 mt-2" for="productname">Category</label>
+                                            <select name="category" id="productCategory" class="form-control" style="color: orangered; font-weight: bold;">
+                                                <% for (let i = 0; i < data.length; i++) { %>
+                                                    <option value="<%= data[i].name %>" <% if (data[i].name === products.category) { %>selected<% } %>><%= data[i].name %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        
+                                        
+                                        
+                                        <div class="form-group">
+                                            <label class="mb-2 mt-2" for="productprice">Product Price</label>
+                                            <input type="number" name="price" class="form-control" id="productprice"
+                                            placeholder="Enter Product Price" value="<%=products.price%>" required>
+                                            
+                                            
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="mb-2 mt-2" for="productprice">Discount(percentage)</label>
+                                            <input type="number" name="discount" class="form-control" id="productdiscount"
+                                            placeholder="Enter Discount" value="<%=products.discount%>" required>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="mb-2 mt-2" for="productname">Stock</label>
+                                            <input type="number" name="stock" class="form-control" id="stock"
+                                                placeholder="Enter stock" value="<%=products.stock%>" required>
+                                         
+                                        </div>
+            
+
+                                        <button class="btn btn-primary mt-2 mx-auto d-block" type="submit">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal for Negative Numbers -->
+<div class="modal fade" id="negativeNumberModal" tabindex="-1" role="dialog" aria-labelledby="negativeNumberModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="negativeNumberModalLabel">Invalid Input</h5>
+          
+        </div>
+        <div class="modal-body">
+          Please enter a valid positive number.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+        </section>
+    <!-- Add this script at the end of your HTML, before </body> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+
+<!-- Add this script at the end of your HTML, before </body> -->
+<!-- Add this script at the end of your HTML, before </body> -->
+<!-- Add this script and style at the end of your HTML, before </body> -->
+<!-- Add this script and style at the end of your HTML, before </body> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function (event) {
+        const priceInput = document.getElementById('productprice');
+        const discountInput = document.getElementById('productdiscount');
+        const stockInput = document.getElementById('stock');
+  
+        // Check for negative values and discount limit
+        if (
+          parseInt(priceInput.value) < 0 ||
+          parseInt(discountInput.value) < 0 ||
+          parseInt(stockInput.value) < 0 ||
+          parseInt(discountInput.value) < 0 || // Check for minimum discount
+          parseInt(discountInput.value) > 100   // Check for maximum discount
+        ) {
+          event.preventDefault(); // Prevent form submission
+  
+          // Add a CSS class to highlight negative values
+          addRedOutline(priceInput);
+          addRedOutline(discountInput);
+          addRedOutline(stockInput);
+  
+          $('#negativeNumberModal').modal('show'); // Display the modal
+        } else {
+          // Optionally, you can remove the CSS class if all values are valid.
+          removeRedOutline(priceInput);
+          removeRedOutline(discountInput);
+          removeRedOutline(stockInput);
+  
+          // Optionally, you can handle the form submission here if all values are valid.
+          // Example: form.submit();
+        }
+      });
+  
+      // Function to add red outline class
+      function addRedOutline(element) {
+        element.classList.add('negative-input');
+      }
+  
+      // Function to remove red outline class
+      function removeRedOutline(element) {
+        element.classList.remove('negative-input');
+      }
+    });
+  </script>
+  
+  <style>
+    /* Add this style in your existing style block or in a separate CSS file */
+    .negative-input {
+      border: 1px solid red !important;
+    }
+  </style>
+  
+
+  

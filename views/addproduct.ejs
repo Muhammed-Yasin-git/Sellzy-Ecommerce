@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELLZY ADMIN</title>
+    <link rel="icon" href="img/s.png">
+    <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/admindash.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+
+</head>
+<!-- include footer -->
+<%- include('include/_adminbase.ejs') %>
+<!-- /include footer -->
+
+   <section>
+       <div class="container-fluid">
+           <div class="row ">
+               <div class="col-lg-8 col-md-8 ml-auto" style="margin-left: 25%;">
+                   <div class="row align-items-center  pt-md-5  mb-5">
+                       <div class="col-12">
+                           <div class="card">
+                               <div class="card-title text-center mt-3">
+                                   <h3>Add Product</h3>
+                               </div>
+
+                           
+
+                               <div class="card-body">
+                                   <form action="/api/add-product" method="POST" enctype="multipart/form-data">
+                                       <div class="form-group">
+                                           <label class="mb-2" for="productname">Product Name</label>
+                                           <input type="text" name="pname" class="form-control" id="productname"
+                                               placeholder="Enter Product Name" required>
+                                        
+                                       </div>
+                                       <div class="form-group">
+                                        <label class="mb-2 mt-2" for="productname">Description</label>
+                                        <textarea name="description" class="form-control" id="productname" placeholder="Enter Product description" rows="4" required></textarea>
+                                    </div>
+                                    
+                                       <div class="form-group">
+                                           <label class="mb-2 mt-2" for="productprice">Product Price</label>
+                                           <input type="number" name="price" class="form-control" id="productprice"
+                                               placeholder="Enter Product Price" required>
+                                       </div>
+                                       
+                                       <div class="form-group">
+                                        <label class="mb-2 mt-2" for="productprice">Discount</label>
+                                        <input type="number" name="discount" class="form-control" id="productdiscount"
+                                        placeholder="Enter Discount" required>
+                                        
+                                        
+                                    </div>
+                                       <div class="form-group">
+                                           <label class="mb-2 mt-2" for="productname">Category</label>
+                                           <select name="category" id="productCategory" class="form-control" style="color: orangered; font-weight: bold; ">
+                                            <% for(let i=0;i<data.length;i++){ %>
+                                            <option  value="<%=data[i].name  %>"><%= data[i].name %></option>
+                                            <% } %>
+                                        </select>
+
+                                        
+                                       </div>
+                                       <div class="form-group">
+                                           <label class="mb-2 mt-2" for="productname">Stock</label>
+                                           <input type="number" name="stock" class="form-control" id="stock"
+                                               placeholder="Enter stock" required>
+                                        
+                                       </div>
+                                       
+                                       <div>
+                                        <label class="mb-4 mt-4" for="productImage">Product Images</label>
+                                        <input type="file" name="image" multiple class="form-control-file" id="productImage" accept="image/*">
+                                    </div>
+                                    <div id="imagePreview" class="mt-2"></div>
+                                    
+                                        
+                                    
+
+                                       
+
+                                       <button class="btn btn-primary mt-4 mx-auto d-block" type="submit">Add
+                                           Product</button>
+                                   </form>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div id="errorModal">
+        <p>Please enter non-negative values for price, discount, and stock!!</p>
+        <button style="margin-left: 85%;" class="btn btn-danger" onclick="closeModal()">OK</button>
+    </div>
+    
+</section>
+<style>
+    .error {
+        border: 1px solid red !important;
+    }
+
+    #errorModal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+ <!-- Bootstrap JS and Popper.js -->
+ <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+ <!-- Custom Script for Image Preview -->
+ <script>
+    // Function to handle image preview
+   // Function to handle image preview for multiple files
+function previewImage() {
+    var input = document.getElementById('productImage');
+    var preview = document.getElementById('imagePreview');
+    
+    // Clear previous previews
+    preview.innerHTML = '';
+
+    if (input.files && input.files.length > 0) {
+        for (var i = 0; i < input.files.length; i++) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var image = document.createElement('img');
+                image.src = e.target.result;
+                image.style.width = '200px';
+                image.style.height = '200px';
+                image.style.objectFit = 'contain';
+                preview.appendChild(image);
+            };
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+}
+
+// Attach the preview function to the file input change event
+document.getElementById('productImage').addEventListener('change', previewImage);
+
+
+    // Additional validation to show red outline for negative values and display modal
+    document.querySelector('form').addEventListener('submit', function (event) {
+        var priceInput = document.getElementById('productprice');
+        var discountInput = document.getElementById('productdiscount');
+        var stockInput = document.getElementById('stock');
+
+        // Remove previous error styles
+        priceInput.classList.remove('error');
+        discountInput.classList.remove('error');
+        stockInput.classList.remove('error');
+
+        if (parseFloat(priceInput.value) < 0) {
+            priceInput.classList.add('error');
+        }
+        if (parseFloat(discountInput.value) < 0) {
+            discountInput.classList.add('error');
+        }
+        if (parseFloat(stockInput.value) < 0) {
+            stockInput.classList.add('error');
+        }
+
+        // Check if any negative values are present
+        if (priceInput.classList.contains('error') || discountInput.classList.contains('error') || stockInput.classList.contains('error')) {
+            document.getElementById('errorModal').style.display = 'block';
+            event.preventDefault(); // Prevent the form submission
+        }
+    });
+
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById('errorModal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

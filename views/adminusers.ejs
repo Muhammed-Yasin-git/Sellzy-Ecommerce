@@ -1,0 +1,137 @@
+<!-- include footer -->
+<%- include('include/_adminbase.ejs') %>
+<!-- /include footer -->
+
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+
+<link rel="stylesheet" href="css/admindash.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+	
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+		
+
+			
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Users</h3>
+                        
+                    </div>
+                    <table id="orderTable">
+                        <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>SI No</th>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <%  for(let i = 0;i < users.length;i++) {%>
+ 
+                            <tr style="cursor: pointer; "  onclick="userdetails('<%=users[i]._id%>')">
+                              
+                                <td>&nbsp;</td>
+                                <td><%= i+1 %></td>
+                                <td><%=users[i].userName%></td>
+                                <td><%=users[i].email%></td>
+                                <td><%=users[i].mobile%></td>
+                                <td><%=users[i].status%></td>
+                                <td>
+                                  <% if (users[i].block==="true") { %>
+                                    <a href="/api/block/?email=<%= users[i].email%>">
+                                      <button type="button" class="btn btn-danger" style="margin-right: -5%;">Unblock</button>
+                                    </a>
+                                  <% } else { %>
+                                    <a href="/api/block/?email=<%= users[i].email%>">
+                                      <button type="button" class="btn btn-success">Block</button>
+                                    </a>
+                                  <% } %>                              
+                                </td>
+                            </tr>
+                            <%}%>
+                           
+                        </tbody>
+                    </table>
+                </div>
+               
+
+			
+		</main>
+		<!-- MAIN -->
+	</section>
+  <style>
+    ol, ul {
+      padding-left: 0%;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="js/adminserver.js"></script>
+  <!-- CONTENT -->
+	<script src="js/new.js"></script>
+ 
+  <script>
+   $(document).ready(function () {
+    // Initialize DataTables
+    var table = $('#orderTable').DataTable({
+        "paging": true,       // Enable pagination
+        "pageLength": 10,     // Set the number of rows per page
+        "columnDefs": [
+            { "width": "5%", "targets": [0] },
+            { "width": "5%", "targets": [1] },
+            { "width": "24%", "targets": [2] },
+            { "width": "35%", "targets": [3] },
+            { "width": "20%", "targets": [4] },
+            { "width": "25%", "targets": [5] },
+            { "width": "25%", "targets": [6] }
+        ]
+    });
+
+    // When the user types in the search box
+    $("#name-search").on("keyup", function () {
+        var searchText = $(this).val().toLowerCase();
+
+        // Use DataTables search API to filter rows
+        table.search(searchText).draw();
+    });
+});
+
+  </script>
+  
+<script>
+    function userdetails(id){
+      const userURL = `/user-details?userid=${id}`
+      
+
+      window.location.href = userURL
+    }
+
+</script>
+	
+</body>
+</html>

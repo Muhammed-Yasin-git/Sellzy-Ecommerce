@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link rel="icon" href="img/s.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+        
+
+</head>
+
+<body>
+    <!-- include header -->
+    <%- include('include/_header') %>
+        <!-- /include header -->
+        <section class="py-5" style="background-color: #F0EEB3;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-8 mb-4">
+
+
+
+                        <div class="card shadow-0 border">
+                            <div class="p-4">
+                                <h5 class="card-title mb-3">checkout</h5>
+                                <div class="row">
+                                    <form id="checkoutForm1">
+
+                                        
+                                            <div class="col-6 nameform">
+                                                <p class="mb-0">Full name</p>
+                                                <div class="form-outline">
+                                                    <input name="userName" type="text" id="type"
+                                                        value="  <%=users.userName%>" class="form-control" required />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6 mb-3">
+                                                <p class="mb-0">Phone</p>
+                                                <div class="form-outline">
+                                                    <input type="number" name="mobile" id="typePhone"
+                                                        value="<%=users.mobile%>" class="form-control" required />
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="prId" value="<%=prId  %>">
+                                            <div class="col-6 mb-3" hidden>
+                                                <p class="mb-0">Email</p>
+                                                <div class="form-outline">
+                                                    <input type="email" id="typeEmail" value="  <%=users.email%>"
+                                                        name="email" class="form-control" required  />
+                                                </div>
+                                            </div>
+                                </div>
+                                <!--   
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                      <label class="form-check-label" for="flexCheckDefault">Keep me up to date on news</label>
+                    </div> -->
+
+
+                                <!-- <h5 class="card-title mb-3">Shipping info</h5> -->
+
+                                <% const defaultAddress = users.address.find(address => address.default); %>
+
+                                <div class="row">
+                                    <div class="col-sm-8 mb-3">
+                                        <p class="mb-0">Address</p>
+                                        <div class="form-outline">
+                                            <input type="text" id="typeText" placeholder="Type here" name="Address"
+                                                value="<%= defaultAddress ? defaultAddress.Address : '' %>" class="form-control" required />
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-sm-4 mb-3">
+                                        <p class="mb-0">City</p>
+                                        <div class="form-outline">
+                                            <input type="text" id="typeCity" value="<%= defaultAddress ? defaultAddress.City : '' %>"
+                                                name="City" placeholder="city" class="form-control" required />
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-sm-4 mb-3">
+                                        <p class="mb-0">House NO.</p>
+                                        <div class="form-outline">
+                                            <input name="House_No" type="number" id="typeHouseNo" placeholder="Type here"
+                                                value="<%= defaultAddress ? defaultAddress.House_No : '' %>" class="form-control" required />
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-sm-4 col-6 mb-3">
+                                        <p class="mb-0">Postal code</p>
+                                        <div class="form-outline">
+                                            <input type="number" id="typePostalCode" name="postalcode" class="form-control"
+                                                value="<%= defaultAddress ? defaultAddress.postcode : '' %>" required />
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-sm-4 col-6 mb-3">
+                                        <p class="mb-0">Alternate Number</p>
+                                        <div class="form-outline">
+                                            <input type="number" id="typeAltNumber" name="altr_number"
+                                                class="form-control" value="<%= defaultAddress ? defaultAddress.altr_number : '' %>"
+                                                required />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                    
+                                            <!-- <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" />
+                    <label class="form-check-label" for="flexCheckDefault1">Save this address</label>
+                  </div> -->
+
+                                            <div class=" mb-3">
+                                                <p class="text-dark  mb-5 h">
+                                                    <a href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#changeAddressModal"
+                                                        style="color: #232F3E;text-decoration: underline;">Change
+                                                        Address</a>
+                                                </p>
+                                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                                            <div class="">
+
+
+                                                <div class="container">
+
+                                                    <div class="row">
+                                                        <!-- Left -->
+                                                        <div class="col-lg-9">
+                                                            <div class="accordion" id="accordionPayment">
+                                                                <!-- Credit card -->
+                                                                <div class="mb-3">
+                                                                    <h2 class="h5 px-4 py-3 ">
+                                                                        
+                                                                        <div class data-bs-toggle="collapse" data-bs-target="#collapseCOD"
+                                                                            aria-expanded="false">
+                                                                            <input class="form-check-input" type="radio" name="payment" id="payment" value="Online_Payment">
+                                                                                
+                                                                            <label class="form-check-label pt-1" for="onlinePayment" >Online Payment</label>
+                                                                        </div>
+                                                                    </h2>
+                                                                    <div id="collapseCC" class="accordion-collapse collapse" data-bs-parent="#accordionPayment">
+                                                                        <div class="accordion-body">
+                                                                            <!-- Content for Credit Card payment -->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- PayPal -->
+                                                                <div class=" mb-3">
+                                                                    <h2 class="h5 px-1 py-3 ">
+                                                                        <div class="form-check w-100" data-bs-toggle="collapse" data-bs-target="#collapseCOD"
+                                                                            aria-expanded="false">
+                                                                            <input class="form-check-input" type="radio" name="payment" id="payment2" value="COD">
+                                                                                
+                                                                            <label class="form-check-label pt-1" for="payment2" >Cash On Delivery (COD)</label>
+                                                                        </div>
+                                                                    </h2>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                   
+                                                        <!-- Right -->
+                                                        
+
+                                                        <input type="text" hidden name="totalsum"
+                                                            value="<%=price%>">
+                                        <button type="submit" class="btn shadow-0 border"
+                                         style="color: antiquewhite; background-color: #232F3E;">Continue</button>
+
+                                                    </div>
+                                                </div>
+                                                </form>
+                                            </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Checkout -->
+                    </div>
+                    <div class=" col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
+                        <div class="ms-lg-4 mt-4 mt-lg-0" style="max-width: 320px;">
+                            <h6 class="mb-3">Summary</h6>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Total price:</p>
+                                <p class="mb-2">₹<%= price.toLocaleString('en-IN') %>
+                                </p>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Shipping cost:</p>
+                                <p class="mb-2">+ ₹40.00</p>
+                            </div>
+                            
+                            <div id="couponDetails" style="display: none;">
+                                <p class="text-danger" id="couponName"></p>
+                                <p class="text-danger" id="discountPercent"></p>
+                            </div>
+
+                            <hr />
+
+                            <!-- This is where the updated price should be displayed -->
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Total price:</p>
+                            <p id="updatedPrice" class="mb-2 fw-bold">₹<%= price.toLocaleString('en-IN') %></p>
+                        </div>
+
+                        <!-- The input field to hold the updated price -->
+                        <input type="number" hidden id="price1" value="<%= price %>">
+
+
+                            <div class="input-group mt-3 mb-4">
+
+                                <form id="promo-code-form">
+                
+                                  <input type="number" hidden id="price1" value=" name="totalsum">
+                
+                                  <input type="text" class="form-control border" name="coupon" id="coupon-input"
+                                    placeholder="Promo code" />
+                
+                                  <h1></h1>
+                
+                                  <button type="button" class="btn btn-light text-primary border"
+                                    onclick="applyPromoCode()">Apply</button>
+                                </form>
+                              </div>
+                              <div class="input-group mt-3 mb-4">
+                                <form id="promo-code-form">
+
+
+                            <!-- <h6 class="text-dark my-4">Items in cart</h6> -->
+
+
+
+                                   
+                                    
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+
+        <body>
+
+
+        </body>
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+
+        <div class=" modal fade" id="changeAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" style="text-decoration:dotted;">Change Address
+                        </h5>
+                        
+                    </div>
+                    <div class="modal-body">
+                        <!-- Add your list of addresses or form for changing addresses here -->
+                        <% for (let i=0; i < users.address.length; i++) { %>
+                            <p>Address <%= i + 1 %>: <%=users.address[i].Address%>,
+                            <%=users.address[i].City%>,
+                                        <%=users.address[i].House_No%>,
+                                            <%=users.address[i].State%>,
+                                                <%=users.address[i].postcode%> &nbsp;&nbsp;
+                                                <form id="checkoutForm" action="/checkout/address?id=<%= i %>&prId<%= prId %>" method="post" >
+
+                                                        <input type="text" value="<%=price %>" hidden name="totalsum">
+
+                                                        <button class="btn btn-secondary"  type="submit">Select</button>
+
+
+
+                                                    </form>
+
+
+                            </p>
+                            <% } %>
+                           <%  if(users.address.length==4) {%>
+                                <p style="display: none;"><a href="#">Add new Address</a></p>
+                                <% }else { %>
+
+                                    <p><a href="/Add-address/checkout">Add new Address</a></p>
+                                    <% } %>
+
+                                <!-- Add form or additional content for changing addresses -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <!-- Add additional buttons or actions as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <!-- include header -->
+        <footer class="text-center text-dark" style=" height: 5vh; background-color: #302F2C; ">
+            <!-- Grid container -->
+            
+            <!-- Copyright -->
+            <div class="text-center p- text-white" style="background-color:#302F2C">
+              © 2020 Copyright:
+              <a class="text-white" href=" ">sellzy</a>
+            </div>
+            <!-- Copyright -->
+          </footer>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script> 
+
+
+<!-- <script>
+  
+    $(document).ready(function () {
+      $('.btn-secondary').on('click', function () {
+        // Trigger form submission
+        $(this).closest('form').submit();
+      });
+    });
+  </script> -->
+<script>
+    $(document).ready(function(){
+       
+        $('#checkoutForm1').submit(function(e){
+            e.preventDefault()
+            
+            
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url:`/submit-order?prId=${'<%=prId%>'}`,
+                type:"POST",
+                data:formData,
+                success: (response)=>{
+                    if(response.url){
+                         window.location.href = response.url
+                         console.log(response.url);
+                    }
+                    if(response.razorSuccess){
+                        
+                        razorpayPayment(response)
+                    }
+                }
+            })
+        })
+    })
+
+    function razorpayPayment(order){
+                    
+                        var options = {
+                                "key": "rzp_test_bGthgwbzA74CwJ", // Enter the Key ID generated from the Dashboard
+                                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                "currency": "INR",
+                                "name": "SELLZY",
+                                "description": "Test Transaction",
+                                "image": "images/s.png",
+                                "order_id": order.razorpay_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                "handler": function (response){
+                                    $.ajax({
+                                        url:`/payment-success?prId${'<%=prId%>'}`,
+                                        method:"POST",
+                                        data:{
+                                            order:order,
+                                            paymentResponse: response
+                                        },
+                                        success:(response)=>{
+                                            window.location.href = response
+                                        }
+                                    })
+                                },
+                                "prefill": {
+                                    "name": "SELLZY",
+                                    "email": "sellzy09@gmail.com",
+                                    "contact": "8301998370"
+                                },
+                                "notes": {
+                                    "address": "Razorpay Corporate Office"
+                                },
+                                "theme": {
+                                    "color": "#3b71ca"
+                                }
+                            };
+                            var rzp = new Razorpay(options);
+                            
+                            rzp.open();
+                    
+                }
+
+    function applyPromoCode() {
+
+         
+
+            var promoCode = document.getElementById('coupon-input').value;
+            var totalsum = document.getElementById('updatedPrice').innerText;
+            var totalsum1 = document.getElementById('price1').value;
+
+
+
+
+            $.ajax({
+            url: '/apply-promo',
+            method: 'post',
+            data: { coupon: promoCode, price: totalsum1 },
+            success: function (response) {
+                if (response.success) {
+                    document.getElementById('couponDetails').style.display = 'block';
+                    document.getElementById('couponName').innerText = 'Coupon: ' + response.coupon;
+                    document.getElementById('discountPercent').innerText = 'Discount: ' + response.discountPercent + '%';
+
+
+                
+                
+                    document.getElementById("updatedPrice").innerText = '₹'+ (response.discount).toLocaleString('en-IN');
+                    document.getElementById('price1').value = response.discount;
+
+
+
+                // document.getElementById("price1").innerText = totalsum - (totalsum / 100) * response.discountPercent
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Coupon Code Applied Succesfully"
+                });
+
+
+
+                } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: response.message,
+                });
+
+                }
+            },
+            error: function () {
+                alert('Error applying promo code. Please try again.');
+
+            }
+            });
+            }
+            document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            });
+            
+
+</script>
+
+
+<style>
+    @media only screen and (max-width: 375px) {
+    .nameform div,input{
+        width: 200px;
+    }
+    
+    }
+</style>
+</html>

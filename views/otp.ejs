@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELLZY</title>
+    <link rel="icon" href="img/s.png">
+    <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <!--Main Navigation-->
+<header>
+    <!-- Jumbotron -->
+    <div class="p-2 text-center bg-dark border-bottom" style="height: 10vh; background-color: #1D1C1B !important;">
+
+      <div class="container">
+        <div class="row gy-3">
+          <!-- Left elements -->
+          <div class="col-lg-2 col-sm-4 col-4">
+            <a href="/" target="_blank" class="float-start" style="text-decoration: none;">
+                <h2 style="color: #F0EEB3; font-family: 'Zen Dots', sans-serif; font-size: 20px; margin-left: 60px;
+                margin-top: 7px">SELLZY</h2>
+            </a>
+          </div>
+          <!-- Left elements -->
+  
+          <!-- Center elements -->
+          <!-- <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+            <div class="d-flex float-end">
+                <a href=signup class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center bg-white" target="_blank"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign up</p> </a>
+            </div>
+          </div> -->
+          <!-- Center elements -->
+  
+          <!-- Right elements -->
+          <div class="col-lg-5 col-md-12 col-12" >
+           
+          </div>
+          <!-- Right elements -->
+        </div>
+      </div>
+    </div>
+    <!-- Jumbotron -->
+  
+    <!-- Navbar -->
+    
+</header>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
+<div style="height: 85vh; background-color: #F0EEB3;">
+<section class="container-fluid d-block" style="background-color:#F0EEB3 ;">
+    <div class="row justify-content-center " style="display: flex; align-content: center;">
+        <div class="col-12 col-md-6 col-lg-4" style="min-width: 500px ;  margin-top: 100px;">
+          <div class="card bg-white mb-1 mt-5 border-0" style="border-radius: 10px; box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02); display: flex; align-items: center;">
+            <div class="card-body p-5 text-center" >
+              <h4>Verify</h4>
+              <p style="color: green;">Your code was sent to you via Email</p>
+              <div class="countdown mb-3" style="color: red; font-size: 16px; margin-top: 10px;"></div>
+              
+              <form id="otpForm" action="/otp-verify" method="post">
+              <div class="otp-field mb-4">
+                <input name="otp1" type="number" />
+                <input name="otp2" type="number" disabled />
+                <input name="otp3" type="number" disabled />
+                <input name="otp4" type="number" disabled />
+                
+              </div>
+  
+             
+              <button  class="btn  btn-success px-3 mb-3">
+                Verify
+              </button>
+            </form>
+  
+           
+
+                    <!-- Add id to Resend OTP button -->
+                    <div class="resend" id="resend" style="display: none;">
+                      <button id="resendButton" onclick="resendOtp()">Resend OTP</button>
+                    </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+</div>
+<footer class="text-center text-dark" style=" height: 5vh; background-color: #302F2C; ">
+    <!-- Grid container -->
+    
+    <!-- Copyright -->
+    <div class="text-center p- text-white" style="background-color:#302F2C">
+      © 2020 Copyright:
+      <a  style="text-decoration: none;" class="text-white" href=" ">sellzy</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <script>
+    const inputs = document.querySelectorAll(".otp-field > input");
+const button = document.querySelector(".btn");
+
+window.addEventListener("load", () => inputs[0].focus());
+button.setAttribute("disabled", "disabled");
+
+inputs[0].addEventListener("paste", function (event) {
+  event.preventDefault();
+
+  const pastedValue = (event.clipboardData || window.clipboardData).getData(
+    "text"
+  );
+  const otpLength = inputs.length;
+
+  for (let i = 0; i < otpLength; i++) {
+    if (i < pastedValue.length) {
+      inputs[i].value = pastedValue[i];
+      inputs[i].removeAttribute("disabled");
+      inputs[i].focus;
+    } else {
+      inputs[i].value = ""; // Clear any remaining inputs
+      inputs[i].focus;
+    }
+  }
+});
+
+inputs.forEach((input, index1) => {
+  input.addEventListener("keyup", (e) => {
+    const currentInput = input;
+    const nextInput = input.nextElementSibling;
+    const prevInput = input.previousElementSibling;
+
+    if (currentInput.value.length > 1) {
+      currentInput.value = "";
+      return;
+    }
+
+    if (
+      nextInput &&
+      nextInput.hasAttribute("disabled") &&
+      currentInput.value !== ""
+    ) {
+      nextInput.removeAttribute("disabled");
+      nextInput.focus();
+    }
+
+    if (e.key === "Backspace") {
+      inputs.forEach((input, index2) => {
+        if (index1 <= index2 && prevInput) {
+          input.setAttribute("disabled", true);
+          input.value = "";
+          prevInput.focus();
+        }
+      });
+    }
+
+    button.classList.remove("active");
+    button.setAttribute("disabled", "disabled");
+
+    const inputsNo = inputs.length;
+    if (!inputs[inputsNo - 1].disabled && inputs[inputsNo - 1].value !== "") {
+      button.classList.add("active");
+      button.removeAttribute("disabled");
+
+      return;
+    }
+  });
+});
+
+let countdown = 20; // Set the initial countdown time in seconds
+  let countdownInterval;
+
+  function startCountdown() {
+    countdownInterval = setInterval(function () {
+      if (countdown > 0) {
+        document.querySelector('.countdown').innerText = `OTP will expire in ${countdown} seconds`;
+        countdown--;
+      } else {
+        clearInterval(countdownInterval);
+        document.querySelector('.countdown').innerText = 'OTP has expired';
+        document.querySelector('#resend').style.display = 'block';
+      }
+    }, 1000);
+  }
+
+  function resendOtp() {
+    // Use the Fetch API to send a request to the server
+    fetch('/resend-otp', { method: 'POST' })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+
+    countdown = 20; // Reset the countdown
+    document.querySelector('.countdown').innerText = '';
+    document.querySelector('#resend').style.display = 'none';
+    startCountdown(); // Restart the countdown
+  }
+
+  window.addEventListener('load', function () {
+    startCountdown();
+  });
+
+  </script>
+
+  <style>
+    .otp-field {
+  flex-direction: row;
+  column-gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.otp-field input {
+  height: 45px;
+  width: 42px;
+  border-radius: 6px;
+  outline: none;
+  font-size: 1.125rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.otp-field input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+.otp-field input::-webkit-inner-spin-button,
+.otp-field input::-webkit-outer-spin-button {
+  display: none;
+}
+
+.resend {
+  font-size: 12px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: black;
+  font-size: 12px;
+  text-align: right;
+  font-family: monospace;
+}
+
+.footer a {
+  color: black;
+  text-decoration: none;
+}
+
+  </style>
+

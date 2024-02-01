@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/admindash.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    
+    <title>Admin Orders</title>
+</head>
+<body>
+
+    <%- include('include/_adminbase.ejs') %>
+
+<!-- CONTENT -->
+<section id="content">
+        <style>
+        /* Style for the radio button */
+        input[type="radio"] {
+            -webkit-appearance: none; /* Remove default styles in Safari */
+            -moz-appearance: none; /* Remove default styles in Firefox */
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid ; /* Border color for the unchecked state */
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        /* Style for the radio button when checked */
+        input[type="radio"]:checked {
+            color: #2ecc71; /* Border color for the checked state */
+        }
+
+        /* Style for the label text next to the radio button */
+        label {
+            display: inline-block;
+            margin-left: 8px;
+            color: #333; /* Text color */
+        }
+    </style>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
+    <main>
+
+        <div class="table-data">
+            <div class="order">
+                <div class="head">
+                    <h3>Recent Orders</h3>
+                    <select id="orderStatusFilter" class="form-control">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Returned">Returned</option>
+                    </select>
+                    
+                    <i class='bx bx-filter'></i>
+                </div>
+                <table id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Product Name</th>
+                            
+                            <th>Date Order</th>
+                            <th>Status</th>
+                            <th>Edit Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <% for (let i = data.length - 1; i >= 0; i--) { %>
+                            <% for (let j = 0; j < data[i].products.length; j++) { %>
+                                <tr  data-href="/order-details?orderId=<%= data[i]._id %>">
+                                    <td>
+                                        <p><%= data[i].userName %></p>
+                                    </td>
+                                    <td><%= data[i].products[j].pname %></td>
+                                    <!-- Add other product-related columns as needed -->
+                                    <% const utcTimestamp = data[i].orderDate; %>
+                                    <% const options = { timeZone: "Asia/Kolkata" }; %>
+                                    <% const istDateTimeString = new Date(utcTimestamp).toLocaleString("en-IN", options); %>
+                                    <td><%= istDateTimeString %></td>
+                                    <% if (data[i].status == 'pending') { %>
+                                        <td><span class="status pending"><%= data[i].status %></span></td>
+                                    <% } else if (data[i].status == 'Shipped') { %>
+                                        <td><span class="status" style="background-color: blue;"><%= data[i].status %></span></td>
+                                    <% } else if (data[i].status == 'Delivered') { %>
+                                        <td><span class="status" style="background-color: green;"><%= data[i].status %></span></td>
+                                    <% } else if (data[i].status == 'Cancelled') { %>
+                                        <td><span class="status" style="background-color: red;"><%= data[i].status %></span></td>
+                                    <% } else if (data[i].status == 'Returned') { %>
+                                        <td><span class="status" style="background-color: brown;"><%= data[i].status %></span></td>
+                                    <% } %>
+                                    <td style="padding-left: 5%;">
+                                        <i class="fa-regular fa-pen-to-square" data-toggle="modal" data-target="#exampleModal<%= data[i]._id %>_<%= j %>"></i>
+                                    
+                                   
+
+                                <!-- Modal -->
+                                <div class="modal" id="exampleModal<%= data[i]._id %>_<%= j %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Choose an Option</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/change-status?id=<%= data[i]._id %>&productIndex=<%= j %>" method="post">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option1"  value="pending" <%= data[i].status === 'pending' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option1">
+                                                            Pending
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option2" value="Shipped" <%= data[i].status === 'Shipped' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option2">
+                                                            Shipped
+                                                        </label>
+                                                    </div>
+                                                    
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option3" value="Delivered" <%= data[i].status === 'Delivered' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option3">
+                                                            Delivered
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option4" value="Cancelled" <%= data[i].status === 'Cancelled' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option4">
+                                                            Cancelled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="option5" value="Returned" <%= data[i].status === 'Returned' ? 'checked' : '' %>>
+                                                        <label class="form-check-label" for="option5">
+                                                            Returned
+                                                        </label>
+                                                    </div>
+                                                    
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    </div>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               </td>
+                        </tr>
+                         <% } %>
+                       <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+    <!-- MAIN -->
+</section>
+<!-- CONTENT -->
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // DataTable initialization
+        var dataTable = $('#orderTable').DataTable({
+            "paging": true,       // Enable pagination
+            "pageLength": 10      // Set the number of rows per page
+        });
+
+        // Handle select box change event
+        $('#orderStatusFilter').change(function () {
+            var selectedStatus = $(this).val();
+
+            // DataTables API to filter the table
+            dataTable.column(3).search(selectedStatus).draw();
+        });
+
+        // Handle row click event
+        $('#orderTable tbody').on('click', 'tr.clickable-row', function () {
+            var url = $(this).data('href');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+</script>
+
+
+
+
+
+<script src="js/adminbase.js"></script>
+</body>
+</html>

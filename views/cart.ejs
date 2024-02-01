@@ -1,0 +1,320 @@
+<!-- include header -->
+<%- include('include/_header') %>
+  <!-- /include header -->
+ 
+  <head>
+    <!-- ... your existing code ... -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oLdC/XM6lStA+kuwt6hP2Zl6aP6iOkqMpnnlW1lTE8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eJw5z0jQe7QpAFiCrSofEIdwFHEK7u2E6oFu8j8yUq8GCeHp6h8cc1F5amhfz8xP" crossorigin="anonymous"></script>
+    <!-- ... your existing code ... -->
+  </head>
+  <body>
+     <!-- cart + summary -->
+  <section class="my-5" style="background-color: #F0EEB3;">
+    <div class="container">
+      <div class="row">
+        <!-- cart -->
+        <div class="col-lg-9">
+          <div class="card border shadow-0">
+            <div class="m-4">
+              <h4 class="card-title mb-4">Your shopping cart</h4>
+              <% if(cart.length>0){ %>
+                <% for (let i=0;i<cart.length;i++){ %>
+                  <div class="row gy-3 mb-4">
+                    <div class="col-lg-5 outofstock" onclick="userdetails('<%=cart[i].prId%>')">
+                      <div class="me-lg-5">
+                        <div class="d-flex">
+                          <img src="images/<%= cart[i].prd_image[0] %>" class="border rounded me-3"
+                            style="width: 96px; height: 96px;" />
+                          <div class="">
+                            <a href="#" class="nav-link">
+                              <%= cart[i].pname %>
+                            </a>
+                            <p class="text-muted">
+                              <%= cart[i].category %>
+                            </p>
+                            <% if(cart[i].catStatus==false){ %>
+                              <p style="color: red;">Product Not available </p>
+
+                              <style>
+                                .outofstock {
+                                  opacity: 90%;
+                                  pointer-events: none;
+                                }
+                              </style>
+                              
+                                <% } %>
+                                <% if(cart[i].stock==0){ %>
+                                  
+                                  <p style="color: red;">Out of stock</p>
+                                  <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+                      <!-- <div class="col-md-4 col-6 mb-3">
+                    <label class="mb-2 d-block">Quantity</label>
+                    <div class="input-group mb-3" style="width: 170px;">
+                        <button class="btn btn-white border border-secondary px-3" type="button" id="decrease-btn" data-mdb-ripple-color="dark">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="text" class="form-control text-center border border-secondary" placeholder="1" aria-label="Example text with button addon" aria-describedby="button-addon1" id="quantity-input" />
+                        <button class="btn btn-white border border-secondary px-3" type="button" id="increase-btn" data-mdb-ripple-color="dark">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div> -->
+                      <div class="">
+                        <% const discount = cart[i].discount %>
+                        <% const disPrice = cart[i].price - (cart[i].price * discount / 100) %>
+                        <text id="indPrice<%= cart[i].prId %>" class="h6">₹ <%= (cart[i].cartQuantity *
+                                  disPrice).toLocaleString('en-IN') %></text> <br />
+                        <small class="text-muted text-nowrap">₹ <%= disPrice.toLocaleString('en-IN') %>/ per item </small>
+                        
+                        
+                      </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap  inc">
+                      <div class="col-md-4 col-6 mb-3">
+                        <label class="mb-2 d-block">Quantity</label>
+                        <div class="input-group mb-3 quantity-container  " style="width: 170px;" >
+
+                          <button class="btn btn-white border border-secondary px-3 decrease-btn" type="button"
+                            onclick="updateCartItem('<%= cart[i].prId %>', -1)">
+                            <i class="fas fa-minus"></i>
+                          </button>
+
+                          <input id="quInput<%=cart[i].prId %>" type="text"
+                            class="form-control text-center border border-secondary quantity-input"
+                            placeholder="<%= cart[i].cartQuantity %>" disabled />
+
+
+                          <button class="btn btn-white border border-secondary px-3 decrease-btn" type="button"
+                            onclick="updateCartItem('<%= cart[i].prId %>', 1)">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+                      <div class="float-md-end">
+                        <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i
+                            class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
+                        <a href="/remove-product?id=<%=cart[i].prId%>"
+                          class="btn btn-light border text-danger icon-hover-danger"> Remove</a>
+                      </div>
+                    </div>
+                  </div>
+                  <% } %>
+                    <% }else{ %>
+                      <p>No Items In Cart</p>
+                      <% } %>
+
+
+            </div>
+
+            <div class="border-top pt-4 mx-4 mb-4">
+              <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery within 1-2 weeks</p>
+              <p class="text-muted">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                aliquip
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- cart -->
+        <!-- summary -->
+        <div class="col-lg-3">
+
+          <div class="card shadow-0 border">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <p class="mb-2"  style="font-size: 14px;">Total price (before discount)</p>
+                    <p class="mb-2 " id="total-price-before" style="font-weight: bold; ">
+                      ₹<%= totalsumWithoutDiscount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+
+                    </p>
+                </div>
+                
+              <div class="d-flex justify-content-between">
+                <p class="mb-2">Total Items</p>
+                <p class="mb-2 text-success">
+                  <%=cart.length %>
+                </p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <p class="mb-2">Total Discount</p>
+                <p class="mb-2 text-danger">
+                    - ₹<%= totalDiscount.toLocaleString('en-IN',{ minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                </p>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between">
+                <p class="mb-2">Total price:</p>
+                <p class="mb-2 fw-bold" id="total-price">
+                    ₹<%= totalsum.toLocaleString('en-IN') %>
+                </p>
+              </div>
+              
+              <form action="/checkout-page" method="post" id="checkoutForm">
+                <input type="hidden" name="totalsum" value="<%= totalsum %>" hidden>
+                <!-- Add a data attribute to store the number of unavailable products -->
+                <div id="unavailableProductsCount" data-count="<%= cart.filter(item => item.catStatus === false || item.stock === 0).length %>"></div>
+                <button class="btn btn-success w-100 shadow-0 mb-2" type="button" onclick="checkAndSubmit()">Make Purchase </button>
+
+              </form>
+              
+            
+              <div class="mt-3">
+                    <a href=" /our-store" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- summary -->
+      </div>
+    </div>
+  </section>
+  <!-- cart + summary -->
+  <div class=" modal-sm modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div >
+                
+                
+            </div>
+            <div class="modal-body">
+                Remove Unavailable Products From Cart
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+  @media only screen and (max-width: 375px) {
+    .inc{
+        margin-left: -15px;
+    }
+  }
+</style>
+  
+
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+  <!-- /include footer -->
+  
+  <!-- ... your existing code ... -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+    function userdetails(id) {
+      const productDetailURL = `/product-details?productId=${id}`;
+      // Redirect to the user details page.
+      window.location.href = productDetailURL;
+    }
+  
+    function checkAndSubmit() {
+  const unavailableProductsCount = document.getElementById('unavailableProductsCount').dataset.count;
+
+  console.log('unavailableProductsCount:', unavailableProductsCount);
+
+  if (unavailableProductsCount > 0) {
+    console.log('Showing Modal');
+    $('#confirmationModal').modal('show');
+  } else {
+    console.log('Submitting Form');
+    document.getElementById('checkoutForm').submit();
+  }
+}
+
+  </script>
+  <script>
+
+function updateCartItem(id, delta) {
+      fetch(`/cart/update?id=${id}&change=${delta}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+
+          const formattedPrice = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR'
+          }).format((data.updatedData.price - (data.updatedData.price * data.updatedData.discount / 100)) * data.updatedData.cartQuantity);
+
+          var quantityInput = document.getElementById(`quInput${data.updatedData.prId}`);
+          quantityInput.placeholder = data.updatedData.cartQuantity;
+
+          document.getElementById(`indPrice${data.updatedData.prId}`).innerHTML = formattedPrice;
+
+          var totalPriceElement = document.getElementById('total-price');
+          var totalPriceElementbefore = document.getElementById('total-price-before');
+          var totalSum = data.totalSum;
+          var formattedTotalSum = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR'
+          }).format(totalSum);
+
+          totalPriceElement.innerHTML = formattedTotalSum
+          totalPriceElementbefore.innerHTML = formattedTotalSum
+
+          if (data.updatedData.cartQuantity == data.updatedData.stock) {
+            document.getElementById(`stock${data.updatedData._id}`).style.display = 'block'
+          } else {
+            document.getElementById("stock").style.display = 'none'
+
+          }
+
+
+        })
+    }
+
+    function updateUI(data) {
+
+      var quantityInput = document.getElementById(`quInput${data.updatedData.prId}`);
+      if (quantityInput) {
+        quantityInput.placeholder = data.updatedData.cartQuantity;
+      }
+
+      var itemPriceElement = document.getElementById(`indPrice${data.updatedData.prId}`);
+      if (itemPriceElement) {
+        itemPriceElement.textContent = data.updatedData.cartQuantity * (data.updatedData.price * data.updatedData.discount / 100);
+      }
+      var totalPriceElement = document.getElementById('total-price');
+      if (totalPriceElement) {
+        const productPrice = data.updatedData.price * (1 - data.updatedData.discount / 100) || 0; // Assuming each item has a 'price' and 'discount' property
+        const totalProductPrice = productPrice * data.updatedData.cartQuantity;
+
+        totalPriceElement.textContent = totalProductPrice;
+      }
+    }
+
+    function decrementCartItem(productId) {
+      updateCartItem(productId, -1);
+    }
+
+    function incrementCartItem(productId) {
+      updateCartItem(productId, 1);
+    }
+
+
+
+
+  </script>
+</body>

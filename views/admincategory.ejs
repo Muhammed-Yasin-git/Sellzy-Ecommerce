@@ -1,0 +1,117 @@
+<!-- include footer -->
+<%- include('include/_adminbase.ejs') %>
+    <!-- /include footer -->
+    <link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+
+    <script src="https://kit.fontawesome.com/23d1247997.js" crossorigin="anonymous"></script>
+
+    
+    <link rel="stylesheet" href="css/admindash.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+
+    <section id="content">
+        <main>
+
+            <a href="/add-category"><button class="btn btn-success">Add Categories</button></a>
+            <a href="/unlisted-category"><button class="btn btn-warning">Unlisted Categories</button></a>
+
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Categories</h3>
+                        <i class='bx bx-search'></i>
+                        <i class='bx bx-filter'></i>
+                    </div>
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>si. No</th>
+                                <th>category</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <% for(let i=0;i<category.length;i++){ %>
+                            <tbody>
+                                <tr onclick="category('<%=category[i].name%>')" >
+                                    <td >
+                                        <p>
+                                            <%=i+1 %>
+                                        </p>
+                                        
+                                    </td>
+                                    
+                                    <td>
+
+                                        <p>
+                                            <%= category[i].name %>
+                                            
+                                        </p>
+                                        
+                                    </td>
+                                    
+                                    
+
+                                    <td><a href="/unlist-category?category=<%=category[i].name%>">
+                                      <button class="btn btn-warning">Unlist </button></a>
+                                    </td>
+
+
+                                </tr>
+                                
+                                <% } %>
+                                
+                            </tbody>
+                            
+                    </table>
+                    
+                </div>
+        </main>
+        <style>
+          /* Add a border-bottom to every table row */
+          table tbody tr {
+            border-bottom: 1px solid #ddd; /* Adjust the color as needed */
+          }
+        
+          /* Optional: Add hover effect to the rows */
+          table tbody tr:hover {
+            background-color: #f5f5f5; /* Adjust the background color as needed */
+          }
+        </style>
+        
+        <script>
+            function category(cat) {
+                const singlecat = `/single-catogary?category=${cat}`
+                window.location.href = singlecat;
+            }
+        </script>
+    </section>
+
+    <script src="js/adminserver.js"></script>
+    </body>
+
+    </html>

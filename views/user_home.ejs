@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELLZY</title>
+    <link rel="icon" href="img/s.png">
+    <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+
+<link rel="icon" type="image/png" href="img/s.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=Jockey+One&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+
+
+
+</head>
+<body style="background-color: #F0EEB3;">
+    <!--Main Navigation-->
+<header>
+    <!-- Jumbotron -->
+    <div class="p-3 text-center bg-dark icons " style="background-color: #1D1C1B !important; ">
+
+      <div class="container">
+        <div class="row gy-3">
+          <!-- Left elements -->
+          <div class="col-lg-2 col-sm-4 col-4 name">
+            <a href="/" class="float-start">
+              <h2 style="color: #F0EEB3; font-family: 'Zen Dots', sans-serif; font-size: 20px; margin-left: 60px;
+              margin-top: 7px;">SELLZY</h2>
+            </a>
+          </div>
+          <!-- Left elements -->
+  
+          <!-- Center elements -->
+          <div class="order-lg-last col-lg-5 col-sm-8 col-8 icons ">
+            <div class="d-flex float-end">
+              <%if(users){%>
+              <%if(users[0]?.status=='Active'){%>
+              <a href="/user-account-details?id=<%=users[0]._id%>" class="me-1  py-1 px-3 nav-link "  style="color: #ffffff"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Account</p> </a>
+              <%}else{%>
+                <a href=signin class="me-1  py-1 px-3 nav-link "  style="color: #ffffff"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Account</p> </a>
+                <%} }else{%>
+                  <a href=signin class="me-1  py-1 px-3 nav-link "  style="color: #ffffff"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign in</p> </a>
+                  <%}%>
+              <a href=""" class="me-1  py-1 px-3 nav-link " style="color: #ffffff"> <i class="fas fa-heart m-1 me-md-2"></i><p class="d-none d-md-block mb-0" style="color: #ffffff">Wishlist</p> </a>
+              <a href="/Mycart" class="  py-1 px-3 nav-link "  style="color: #F0EEB3 !important"> <i class="fas fa-shopping-cart m-1 me-md-2 "></i><p class="d-none d-md-block mb-0" style="color: #F0EEB3">My cart</p> </a>
+            </div>
+          </div>
+          <!-- Center elements -->
+  
+          <!-- Right elements -->
+          
+        
+        <div class="col-lg-5 col-md-12 col-12">
+            <div class="input-group float-center">
+              
+                <div class="form-outline bg-white" style="border-radius: 5px;">
+                    <input type="search" id="form1" class="form-control" />
+                    <label class="form-label" for="form1">Search</label>
+                </div>
+                <button type="submit" class="btn btn-white shadow-0" style="background-color: #F0EEB3;" onclick="performSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+          <!-- Right elements -->
+        </div>
+      </div>
+    </div>
+    <!-- Jumbotron -->
+  
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="height: 40px; font-size: small; background-color: #F0EEB3;" >
+      <!-- Container wrapper -->
+      <div class="container  justify-content-md-between">
+        <!-- Toggle button -->
+        <button
+                class="navbar-toggler  text-dark "
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarLeftAlignExample"
+                aria-controls="navbarLeftAlignExample"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                style="background-color: #F0EEB3;"
+                >
+          <i class="fas fa-bars"></i>
+        </button>
+  
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarLeftAlignExample" style="background-color: #f1efa0;">
+          <!-- Left links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark space" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false" style="font-weight: bolder;">
+                  SHOP CATEGORIES
+                </a>
+                <!-- Dropdown menu -->
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #F0EEB3;">
+                
+                  <%for(let i=0; i < categories.length ; i++){%>
+                  <li>
+                    <a class="dropdown-item" href="/our-store?search=<%= searchQuery %>&catFilter=<%= encodeURIComponent(categories[i].name) %>">
+                      <%= categories[i].name %>
+                  </a>
+                  </li>
+                  <%}%>
+                  <!-- <li>
+                    <a class="dropdown-item" href="#">smartphone</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">Headset</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">Watches</a> -->
+                 
+                </ul>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark space" aria-current="page" href="#">HOME</a>
+            </li>
+           
+            <li class="nav-item">
+              <a m class="nav-link text-dark space " href="/our-store">STORE</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark space href="#">BLOGS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-dark space" href="#">CONTACT</a>
+              </li>
+            <!-- Navbar dropdown -->
+           
+          </ul>
+          <!-- Left links -->
+        </div>
+      </div>
+      
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+</header>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="background-color: #F0EEB3;">
+
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+      aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+      aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+      aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+      aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4"
+      aria-label="Slide 5"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="img/88.jpg" style="aspect-ratio: 12/4 ;" class="d-block w-100"
+        alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="img/56.jpg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="img/iphone.jpeg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="img/12.jpg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="img/15.jpg" style="aspect-ratio: 12/4;" class="d-block w-100"
+        alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span id="kdjfwdwi" class="visually-hidden">Next</span>
+  </button>
+</div>
+<!-- Jumbotron -->
+</header>
+<!-- Products -->
+<section>
+<div class="container my-5 main-div " style="background-color: #F0EEB3;;">
+  <header class="mb-4">
+    <h3>New products</h3>
+  </header>
+  <div id="productsContainer" class="items" style="display: flex; flex-wrap: wrap;">
+    <div class="row" style="min-height: max-content;">
+      <% for(let i = 0; i < 8; i++) { %>
+
+        <div class="col-sm-6 col-md-3 d-flex hidden-item" style="cursor: pointer;  max-width: 50%;">
+          <div class="card w-100 my-2" style="box-shadow: 0 10px 36px rgba(0, 0, 0, 0.24);">
+            <div class="discount-badge position-absolute top-0 start-0 mt-2 px-1 py-0"
+                                  style="background-color: #f6f16a; color: #131921; border-radius: 90px; margin-left: 8px; font-size: 0.65rem; font-weight: bolder;">
+                                  <%= products[i].discount %>% OFF
+                                </div>
+            <div style="width: 100%; display: flex; justify-content: end;"></div>
+            <div class="images" style="border: 50px white; width: 100%; display: flex; justify-content: center;" onclick="userdetails('<%=products[i]._id%>')">
+              <img src="images/<%=products[i].prd_image[0]%>" style="aspect-ratio: 1 / 1; width: 100%; margin-top: 30px; margin-bottom: 15px; height: 210px; object-fit: contain;" class="card-img-top" />
+            </div>
+            <% var shortPname=products[i].pname.slice(0, 25); %>
+            <p style="margin-left: 15px; margin-bottom: -18px; opacity: .5; font-size: 16px;"> <!-- Adjust the font-size as needed -->
+              <%=products[i].category  %>
+            </p>
+            <div class="card-body d-flex flex-column">
+              <h6 class="card-text" style="font-size: 17px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-left: -8px;">
+                <%=shortPname %>
+                <% if(shortPname.length>=22){ %>
+                  ..
+                <% } %>
+              </h6>
+              <p class="card-text" style="margin-left: -8px; opacity: .7; margin-bottom: 6px;"></p>
+              <h1>
+                <% var discount = products[i].discount %>
+                <% var Odiscount = products[i].price * discount / 100 %>
+                <% var showPrice= products[i].price-Odiscount %>
+                <p class="card-text" style="margin-left: -8px; font-weight: bolder; font-size: 20px;"> <!-- Adjust the font-size as needed -->
+                  ₹<%=Math.floor(showPrice).toLocaleString('en-IN')  %>
+                  <span style="font-size: 10px; text-decoration: line-through; font-weight: bolder; opacity: .7;">₹<%=products[i].price.toLocaleString('en-IN') %></span>
+                </p>
+              </h1>
+            </div>
+          </div>
+        </div>
+      <% } %>
+      <% if(products.length==0){ %>
+        <h1>No Products</h1>
+      <% } %>
+    </div>
+  </div>
+  
+
+  </div>
+  
+</div>
+</section>
+<div class="text-center mb-4">
+  <button onclick="redirectToOurStore()" class="btn" style="background-color: #f6f16a;">Show More</button>
+</div>
+</div>
+
+
+
+<script>
+
+// 
+
+  function redirectToOurStore(){
+
+    window.location.href = "/our-store"
+
+  }
+
+  function userdetails(id){
+      const productDetailURL = `/product-details?productId=${id}`;
+  
+  // Redirect to the user details page.
+  window.location.href = productDetailURL;
+}
+
+</script>
+<style>
+   .hidden-item {
+    display: none;
+  }
+
+  .cart{
+    border-radius: 50px;
+    background: rgba(48, 47, 44, 0.80);
+  }
+  .space{
+    margin-left: 3%;
+  }
+  @media only screen and (max-width: 375px) {
+  /* Adjust styles for screens with a width up to 375px */
+  body {
+    font-size: 14px; 
+  }
+  
+  
+  
+  .float-start {
+    margin-left: -50px;
+  }
+
+  .navbar {
+    height: 60px; /* Adjust the height of the navbar */
+    font-size: 12px; /* Adjust the font size for navbar links */
+  }
+
+  .carousel-inner img{
+    height: 250px;
+    object-fit: cover;
+  }
+  
+
+  /* Example: Adjust the carousel */
+  #carouselExampleIndicators {
+    height: 250px; /* Adjust the height of the carousel */
+  }
+
+  .navbar-collapse {
+    z-index: 1;
+  }
+  .items{
+    display: flex;
+    justify-content: space-around;
+  }
+  .images img{
+    max-height: 120px; /* Adjust the max-height as needed */
+      width: auto;
+  }
+
+  /* Example: Adjust the product cards */
+  .card {
+    width: 100%; /* Make cards full width on small screens */
+    height: 260px; /* Adjust margin between cards */
+  }
+
+  .card-img-top {
+    height: 150px; /* Adjust the height of product images */
+  }
+
+  
+
+  p, h6, .card-text {
+      font-size: 12.5px !important;
+    }
+  
+  /* Example: Adjust the footer */
+  footer {
+    padding: 10px;
+  }
+}
+
+</style>
+
+<script>
+  function performSearch() {
+      var searchInput = document.getElementById('form1').value.trim();
+      // You can modify the regex pattern based on your requirements
+      var regexPattern = new RegExp(searchInput, 'i');
+
+      // Redirect to the "/our-store" page with the search query
+      window.location.href = "/our-store?search=" + encodeURIComponent(searchInput);
+  }
+  document.getElementById('form1').addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+</script>
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+<!-- /include footer -->

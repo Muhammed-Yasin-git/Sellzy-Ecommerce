@@ -1,0 +1,231 @@
+<!-- include header -->
+<%- include('include/_header') %>
+    <!-- /include header -->
+
+
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <link rel="icon" type="image/x-icon" href="images/fav.png">
+
+
+        <!-- Add Bootstrap JavaScript library -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+        <!-- MDB -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+
+
+
+    </head>
+
+    <body>
+        <section class=" " style="background-color: #F0EEB3" 
+        <div
+            class="mask d-flex align-items-center h-100 gradient-custom-3">
+            <div class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 col-md-9 col-lg-8 col-xl-10">
+                        <div class="mt-5 mb-5" style="width: 100%; border-radius: 15px; background-color:white">
+                            <div class="card-body p-5" style="box-shadow: rgba(239, 239, 239, 0.2) 0px 8px 24px;">
+                                <h2 class="text-uppercase text-center mb-1 h"
+                                    style="color: #777777; font-weight: bold; font-size: 20px;">Addresses</h2>
+
+                                    <p class="text-dark text-center mb-5 h">
+                                        <a href="javascript:history.back();" style="color: #232F3E; text-decoration: underline;">Return to account Details</a>
+                                    </p>
+                                    <% if(users && users.length > 0 && users[0].address && users[0].address.length == 4) {%>
+                                        <div class="d-flex justify-content-center mb-5">
+                                            <a href="#"><button type="submit"  class="btn  btn-success "
+                                                    style="display: none;">Add
+                                                    New Address</button> </a>
+                                        </div>
+                                        <% }else { %>
+                                    <div class="d-flex justify-content-center mb-5" >
+                                    <a href="/Add-address"><button type="submit"  class="btn  btn-success "
+                                            style=" color: rgb(255, 255, 255); box-shadow: none; width: 100%; border-radius: 30px; height: 40Px; ">Add
+                                            New Address</button> </a>
+                                </div>
+                                <% } %>
+
+                                <!-- <p class="text-dark text-center mb-5 h">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#changeAddressModal"
+                                        style="color: #232F3E;text-decoration: underline;">Change Address</a>
+                                </p> -->
+
+
+
+
+
+                               
+
+
+                                <div class="row vh-100" >
+                                    <% if (users && users.length > 0 && users[0].address && users[0].address.length > 0) { %>
+                                        <% for (let a = 0; a < users[0].address.length; a++) { %>
+                                            <div class="col-md-6 mb-4">
+                                               <div class="card " style="border-radius: 15px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1); background-color: #f7f7f7;">
+                                                    <!-- Other card content here -->
+                                                    <div class="d-flex justify-content-center align-items-center gap-5">
+                                                        <p style="font-size: larger; font-weight: 500; color: black; text-decoration: underline; text-align: center; margin-top: 2%;">Address <%=a+1%></p>
+                                                        <% if(users[0].address[a].default) { %>
+                                                            <span class="status" style="text-align: center; width: 80px; height: 20px; background-color: green; border-radius: 10% ; color: #f7f7f7; font-size: smaller; margin-left: 35%; ">Default</span>
+                                                        <% } else { %>
+                                                            <form action="/make-default/?id=<%=users[0].address[a]._id %>" method="post" >
+                                                                <button class="btn btn-outline-primary" style="margin-left: 75px;" >Make Default</button>
+                                                            </form>
+                                                        <% } %>
+                                                    </div>
+                                                    <p style="text-align: center;"><a style="color: #232F3E;"></a><span style="color: black; font-weight: 500;">Address:</span> <%=users[0].address[a].Address%></p>
+                                                    <p style="text-align: center;"><a style="color: #232F3E;"></a><span style="color: black; font-weight: 500;">City:</span><%=users[0].address[a].City%></p>
+                                                    <p style="text-align: center;"><a style="color: #232F3E;"></a><span style="color: black; font-weight: 500;">House_No:</span> <%=users[0].address[a].House_No%></p>
+                                                    <p style="text-align: center;"><a style="color: #232F3E;"></a><span style="color: black; font-weight: 500;">State:</span> <%=users[0].address[a].State%></p>
+                                                    <p style="text-align: center;"><a style="color: #232F3E;"></a><span style="color: black; font-weight: 500;">Alternate no:</span> <%=users[0].address[a].altr_number%></p>
+                                                    <p style="text-align: center;"><a style="color: #232F3E;"></a><span style="color: black; font-weight: 500;">Post Code:</span> <%=users[0].address[a].postcode%></p>
+                                                    <!-- Other card content here -->
+                                                    <div class="d-flex justify-content-lg-end mb-1" >
+                                                        <!-- Modify the delete button -->
+
+                                                        
+                                                        <a href="#" 
+                                                            class="btn btn-light border px-2 pt-2 icon-hover delete-button" 
+                                                            style="margin-right: 3%;" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#deleteConfirmationModal"
+                                                            data-address-index="<%= a %>"
+                                                            data-address-id="<%= users[0].address[a]._id %>">
+                                                            <i class="fas fa-trash fa-lg text-secondary px-1"></i>
+                                                        </a>
+
+                                                         
+                                                     
+
+                                                          
+                                                          <a href="/update-address/?id=<%= users[0].address[a]._id %>&addressIndex=<%= a %>" class="btn btn-light border px-2 pt-2 icon-hover" style="margin-right: 3%;">
+                                                            <i class="fas fa-edit fa-lg text-secondary px-1"></i>
+                                                         </a>
+                                                         
+                                                         
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        <% } %>
+                                    <% } else { %>
+                                        <div class="col-12">
+                                            <p>No addresses found. <a href="/Add-address"><i class="fa fa-plus mt-mb-3 me-md-2" ></i></a></p>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                
+                                
+
+                                <!-- Modal for Delete Confirmation -->
+                                        <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                Are you sure you want to delete this address?
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <a  
+                                                    class="btn btn-danger">
+                                                    Delete
+                                                 </a>
+                                                 
+                                                
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+  
+
+
+                               
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </body>
+    <footer class="text-center text-dark" style=" height: 5vh; background-color: #302F2C; ">
+        <!-- Grid container -->
+        
+        <!-- Copyright -->
+        <div class="text-center p- text-white" style="background-color:#302F2C">
+          © 2020 Copyright:
+          <a class="text-white" href=" ">sellzy</a>
+        </div>
+        <!-- Copyright -->
+      </footer>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+
+    </html>
+    <script>
+        function setDefaultAddress(index) {
+            // Set the selected address as the default
+            // For example, you can update the content of the default address on the page
+            document.getElementById('defaultAddress').innerHTML = `
+        locality: ${users[0].address[index].locality}<br>
+        district: ${users[0].address[index].district}<br>
+        country: ${users[0].address[index].country}<br>
+        postcode: ${users[0].address[index].postcode}
+      `;
+
+            // Close the modal
+            $('#changeAddressModal').modal('hide');
+        }
+    </script>
+
+<!-- Add this script at the end of your HTML, after including jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    // Function to set modal data
+    function setModalData(addressIndex, addressId) {
+        $('#deleteConfirmationModal .modal-body').text('Are you sure you want to delete this address?');
+        $('#deleteConfirmationModal .btn-danger').attr('href', `/delete-address?id=${addressId}&addressIndex=${addressIndex}`);
+    }
+
+    // Modal for Delete Confirmation
+    $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var addressIndex = button.data('address-index');
+        var addressId = button.data('address-id');
+
+        // Call the function to set modal data
+        setModalData(addressIndex, addressId);
+    });
+ 
+    // Add a click event listener for the delete button
+    $('.delete-button').on('click', function (event) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+    });
+</script>
+
+
+
+
+  
+
+ 

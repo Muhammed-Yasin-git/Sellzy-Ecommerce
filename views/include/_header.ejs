@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SELLZY</title>
+    <link rel="icon" href="img/s.png" />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.min.js"
+      integrity="sha256-oLdC/XM6lStA+kuwt6hP2Zl6aP6iOkqMpnnlW1lTE8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-eJw5z0jQe7QpAFiCrSofEIdwFHEK7u2E6oFu8j8yUq8GCeHp6h8cc1F5amhfz8xP"
+      crossorigin="anonymous"
+    ></script>
+    <!-- ... your existing code ... -->
+  </head>
+  <body>
+    <!--Main Navigation-->
+    <header>
+      <!-- Jumbotron -->
+      <div
+        class="p-3 text-center bg-dark"
+        style="background-color: #1d1c1b !important"
+      >
+        <div class="container">
+          <div class="row gy-3">
+            <!-- Left elements -->
+            <div class="col-lg-2 col-sm-4 col-4">
+              <a href="/" class="float-start">
+                <h2
+                  style="
+                    color: #f0eeb3;
+                    font-family: 'Zen Dots', sans-serif;
+                    font-size: 20px;
+                    margin-left: 60px;
+                    margin-top: 7px;
+                  "
+                >
+                  SELLZY
+                </h2>
+              </a>
+            </div>
+            <!-- Left elements -->
+
+            <!-- Center elements -->
+            <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+              <div class="d-flex float-end">
+                <a href="#" class="me-1 py-1 px-3 nav-link">
+                  <i
+                    class="fas fa-heart m-1 me-md-2"
+                    style="color: #ffffff"
+                  ></i>
+                  <p class="d-none d-md-block mb-0 text-white">Wishlist</p>
+                </a>
+                <a href="/Mycart" class="me-1 py-1 px-3 nav-link">
+                  <i
+                    class="fas fa-shopping-cart m-1 me-md-2"
+                    style="color: #f0eeb3"
+                  ></i>
+                  <p class="d-none d-md-block mb-0" style="color: #f0eeb3">
+                    My cart
+                  </p>
+                </a>
+              </div>
+            </div>
+            <!-- Center elements -->
+
+            <!-- Right elements -->
+            <div class="col-lg-5 col-md-12 col-12">
+              <div class="input-group float-center">
+                <div class="form-outline bg-white" style="border-radius: 5px">
+                  <input type="search" id="form1" class="form-control" " />
+                  <label class="form-label" for="form1">Search</label>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-white shadow-0"
+                  style="background-color: #f0eeb3"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Right elements -->
+          </div>
+        </div>
+      </div>
+      <!-- Jumbotron -->
+
+      <!-- Navbar -->
+      <nav
+        class="navbar navbar-expand-lg navbar-light"
+        style="
+          height: 40px;
+          font-size: small;
+          background-color: #f0eeb3;
+          z-index: 1;
+        "
+      >
+        <!-- Container wrapper -->
+        <div
+          class="container justify-content-md-start"
+          style="background-color: #f0eeb3"
+        >
+          <!-- Toggle button -->
+          <button
+            class="navbar-toggler text-dark"
+            type="button"
+            data-mdb-toggle="collapse"
+            data-mdb-target="#navbarLeftAlignExample"
+            aria-controls="navbarLeftAlignExample"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <!-- Collapsible wrapper -->
+          <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-dark" aria-current="page" href="#"
+                  >HOME</a
+                >
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="/our-store">OUR SHOP</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="#">BLOGS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="#">CONTACT</a>
+              </li>
+              <!-- Navbar dropdown -->
+            </ul>
+            <!-- Left links -->
+          </div>
+        </div>
+
+        <!-- Container wrapper -->
+      </nav>
+      <!-- Navbar -->
+    </header>
+  </body>
+</html>
