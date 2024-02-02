@@ -13,43 +13,40 @@
                                         style="font-weight: bold;">
                                         <%= data[i]._id %>
                                     </span></p>
-                                <% for (let j = 0; j < data[i].products.length; j++) { %>
-                                    <div class="row gy-3 mb-2">
-                                        <div class="col-2">
-                                            <a href="/order-details?orderId=<%= data[i]._id %>&productId=<%= data[i].products[j]._id %>">
-                                                <img src="images/<%= data[i].products[j].prd_image[0] %>"
-                                                    class="img-fluid" alt="<%= data[i].products[j].pname %>" />
-                                            </a>
-                                        </div>
-                                        <div class="col-8 d-flex flex-column align-items-start d-flex justify-content-center">
-                                            <h6 class="card-subtitle mb-2 text-muted text-center">
-                                                <%= data[i].products[j].pname %>
-                                            </h6>
-                                            <p class="card-text text-muted text-center">
-                                                <%= data[i].products[j].category %>
-                                            </p>
-                                        </div>
-                                        <div class="col-2 d-flex align-items-center buttons">
-                                            <% if (data[i].status === 'Returned') { %>
-                                                <button class="btn btn-dark" disabled>Returned</button>
-                                            <% } else if (data[i].status === 'Delivered') { %>
-                                                <a href="/return-order?orderId=<%= data[i]._id %>">
-                                                    <button class="btn btn-warning" id="returnButton_<%= i %>_<%= j %>" disabled>Return</button>
-                                                </a>
-                                            <% } else if (data[i].status === 'Shipped') { %>
-                                                
-                                                    <button class="btn btn-warning" id="returnButton_<%= i %>_<%= j %>" disabled>Return</button>
-                                                </a>
-                                            <% }else if (data[i].status !== 'Cancelled') { %>
-                                                <a href="/cancel-order?orderId=<%= data[i]._id %>">
-                                                    <button class="btn btn-outline-primary" id="cancelButton_<%= i %>_<%= j %>">Cancel</button>
-                                                </a>
-                                            <% } else { %>
-                                                <button class="btn btn-danger" >Cancelled</button>
-                                            <% } %>
-                                        </div>
+                                <% let firstProduct = data[i].products[0]; %>
+                                <div class="row gy-3 mb-2">
+                                    <div class="col-2">
+                                        <a href="/order-details?orderId=<%= data[i]._id %>&productId=<%= firstProduct._id %>">
+                                            <img src="images/<%= firstProduct.prd_image %>"
+                                                class="img-fluid" alt="<%= firstProduct.pname %>" />
+                                        </a>
                                     </div>
-                                <% } %>
+                                    <div class="col-8 d-flex flex-column align-items-start d-flex justify-content-center">
+                                        <h6 class="card-subtitle mb-2 text-muted text-center">
+                                            <%= firstProduct.pname %>
+                                        </h6>
+                                        <p class="card-text text-muted text-center">
+                                            <%= firstProduct.category %>
+                                        </p>
+                                    </div>
+                                    <div class="col-2 d-flex align-items-center buttons">
+                                        <% if (data[i].status === 'Returned') { %>
+                                            <button class="btn btn-dark" disabled>Returned</button>
+                                        <% } else if (data[i].status === 'Delivered') { %>
+                                            <a href="/return-order?orderId=<%= data[i]._id %>">
+                                                <button class="btn btn-warning" id="returnButton_<%= i %>" disabled>Return</button>
+                                            </a>
+                                        <% } else if (data[i].status === 'Shipped') { %>
+                                            <button class="btn btn-warning" id="returnButton_<%= i %>" disabled>Return</button>
+                                        <% } else if (data[i].status !== 'Cancelled') { %>
+                                            <a href="/cancel-order?orderId=<%= data[i]._id %>">
+                                                <button class="btn btn-outline-primary" id="cancelButton_<%= i %>">Cancel</button>
+                                            </a>
+                                        <% } else { %>
+                                            <button class="btn btn-danger" disabled>Cancelled</button>
+                                        <% } %>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     <% } %>
@@ -60,6 +57,9 @@
         </div>
     </div>
 </section>
+
+<!-- /include footer -->
+
 
 <style>
     @media (max-width: 375px) {

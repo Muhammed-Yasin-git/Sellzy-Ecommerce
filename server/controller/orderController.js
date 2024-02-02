@@ -21,7 +21,10 @@ const razorpayInstance = new Razorpay({
         console.log("Discount:", data.discount);
   
   
-        const Price = req.session.couponApplied ? req.session.couponApplied : req.session.newPrice;
+        
+        const Price = data.price - (data.price * (data.discount / 100));
+        
+        
         console.log("Calculated Price:", Price);
 
         const NewOrder = new orderDb({
@@ -80,6 +83,7 @@ const razorpayInstance = new Razorpay({
         } else {
           console.log("COD reached");
           const data1 = await NewOrder.save();
+         
           await productdb.updateOne({ _id: id }, { $inc: { stock: -1 } });
   
           req.session.orderDetails = data1;
@@ -93,89 +97,110 @@ const razorpayInstance = new Razorpay({
           }
         }
       } else {
-        const cartEmail = req.session.email;
-        const productData = await cartDb.find({ email: cartEmail });
-        const Price = req.session.newPrice;
-        console.log(Price+"hello");
-  
-        const allOrderDetails = [];
-        for (let i = 0; i < productData.length; i++) {
-          const NewOrder = {
+        try {
+          const cartEmail = req.session.email;
+          const productData = await cartDb.find({ email: cartEmail });
+          const Price = req.session.newPrice;
+          console.log(Price + "hello");
+      
+          const allOrderDetails = {
             email: cartEmail,
             userName: req.body.userName,
             price: Price,
             shippingAddress: {
               Address: req.body.Address,
               City: req.body.City,
-              House_no: req.body.House_No,
-              postcode: req.body.postalcode,
+              House_No: req.body.House_No,
+              postalcode: req.body.postalcode,
               AlternateNumber: req.body.altr_number
             },
-            products: productData[i],
+            products: [],
             PaymentMethod: req.body.payment,
           };
-          allOrderDetails.push(NewOrder);
-        }
-  
-        req.session.orderDetails = allOrderDetails;
-  
-        if (req.body.payment === "Online_Payment") {
-          const randomOrderID = Math.floor(Math.random() * 1000000).toString();
+      
+          for (let i = 0; i < productData.length; i++) {
+            const productOrder = {
+              prId: productData[i].prId,
+              pname:productData[i].pname,
+              email:req.session.email,
+              cartQuantity: productData[i].cartQuantity,
+              prd_image:productData[i].prd_image[0],
+              category:productData[i].category,
+              price:productData[i].price,
+              discount:productData[i].discount
 
-          const discountedPrice = req.session.newPrice;
-  
-          const amount = discountedPrice * 100;
-          const options = {
-            amount: amount,
-            currency: "INR",
-            receipt: randomOrderID,
-          };
-  
-          await new Promise((resolve, reject) => {
-            razorpayInstance.orders.create(options, (err, order) => {
-              console.log(err);
-              if (!err) {
-                console.log("Reached RazorPay Method on cntrlr", randomOrderID);
-                res.status(200).json({
-                  razorSuccess: true,
-                  msg: "order created",
-                  order_id: order.id,
-                  amount: amount,
-                  key_id: raz_key_id,
-                  name: req.session.email,
-                  contact: "8301998370",
-                  email: "sellzy09@gmail.com",
-                });
-                resolve();
-              } else {
-                console.error("Razorpay Error:", err);
-                res.status(400).json({
-                  razorSuccess: false,
-                  msg: "Error creating order with Razorpay",
-                });
-                reject(err);
-              }
-            });
-          });
-        } else {
-          for (let i = 0; i < allOrderDetails.length; i++) {
-            const email = req.session.email;
-            const neworderItem = new orderDb(allOrderDetails[i]);
-  
-            await neworderItem.save();
-            const productId = allOrderDetails[i].products.prId;
-            const quantity = allOrderDetails[i].products.cartQuantity;
-            await productdb.updateOne(
-              { _id: productId },
-              { $inc: { stock: -quantity } }
-            );
+              // Add other product details as needed
+            };
+            allOrderDetails.products.push(productOrder);
           }
-  
-          await cartDb.deleteMany({ email: cartEmail });
-  
-          return res.json({ url: `/order-success` });
+      
+          req.session.orderDetails = [allOrderDetails];
+      
+          if (req.body.payment === "Online_Payment") {
+            const randomOrderID = Math.floor(Math.random() * 1000000).toString();
+
+            const discountedPrice = req.session.newPrice;
+    
+            const amount = discountedPrice * 100;
+            const options = {
+              amount: amount,
+              currency: "INR",
+              receipt: randomOrderID,
+            };
+    
+            await new Promise((resolve, reject) => {
+              razorpayInstance.orders.create(options, (err, order) => {
+                console.log(err);
+                if (!err) {
+                  console.log("Reached RazorPay Method on cntrlr", randomOrderID);
+                  res.status(200).json({
+                    razorSuccess: true,
+                    msg: "order created",
+                    order_id: order.id,
+                    amount: amount,
+                    key_id: raz_key_id,
+                    name: req.session.email,
+                    contact: "8301998370",
+                    email: "sellzy09@gmail.com",
+                  });
+                  resolve();
+                } else {
+                  console.error("Razorpay Error:", err);
+                  res.status(400).json({
+                    razorSuccess: false,
+                    msg: "Error creating order with Razorpay",
+                  });
+                  reject(err);
+                }
+              });
+            });
+          } else {
+            for (let i = 0; i < allOrderDetails.products.length; i++) {
+              const productOrder = allOrderDetails.products[i];
+              const productId = productOrder.prId;
+              const quantity = productOrder.cartQuantity;
+      
+              await productdb.updateOne(
+                { _id: productId },
+                { $inc: { stock: -quantity } }
+              );
+            }
+      
+            await cartDb.deleteMany({ email: cartEmail });
+      
+            const newOrderItem = new orderDb(allOrderDetails);
+            await newOrderItem.save();
+
+            console.log(newOrderItem.shippingAddress+"hiiiiiiiiiiiiii");
+      
+            return res.json({ url: `/order-success` });
+          }
+        } catch (err) {
+          console.error("Error:", err);
+          return res.status(500).send(err);
         }
-      }
+      };
+      
     } catch (err) {
       console.error("Error:", err);
       return res.status(500).send(err);

@@ -104,16 +104,16 @@
                                     <div class="col-sm-4 mb-3">
                                         <p class="mb-0">House NO.</p>
                                         <div class="form-outline">
-                                            <input name="House_No" type="number" id="typeHouseNo" placeholder="Type here"
-                                                value="<%= defaultAddress ? defaultAddress.House_No : '' %>" class="form-control" required />
+                                            <input  type="number" id="typeHouseNo" placeholder="Type House No:"
+                                                value="<%= defaultAddress ? defaultAddress.House_No : '' %>" name="House_No" class="form-control" required />
                                         </div>
                                     </div>
                                 
                                     <div class="col-sm-4 col-6 mb-3">
                                         <p class="mb-0">Postal code</p>
                                         <div class="form-outline">
-                                            <input type="number" id="typePostalCode" name="postalcode" class="form-control"
-                                                value="<%= defaultAddress ? defaultAddress.postcode : '' %>" required />
+                                            <input type="number" id="typePostalCode"  class="form-control"
+                                                value="<%= defaultAddress ? defaultAddress.postcode : '' %>" name="postalcode" required />
                                         </div>
                                     </div>
                                 

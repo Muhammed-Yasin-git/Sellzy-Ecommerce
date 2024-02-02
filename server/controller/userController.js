@@ -699,11 +699,13 @@ exports.checkOut = async (req, res) => {
 
     if (prId) {
       const productData = await productDb.findById(prId);
-      totalprice = calculateDiscountedPrice(productData.price, productData.discount);
+      const discountedPrice = productData.price - (productData.price * (productData.discount / 100));
+
+      totalprice = discountedPrice
     } else {
       const cartData = await cartDb.find({ email: email });
       // Assuming cartData is an array, use reduce to calculate the total discounted price
-      totalprice = cartData.reduce((acc, item) => acc + calculateDiscountedPrice(item.price, item.discount), 0);
+      totalprice = cartData.reduce((acc, item) => acc + calculateDiscountedPrice(item.price, item.discount,item.cartQuantity), 0);
       req.session.newPrice = totalprice;
     }
 
@@ -735,10 +737,10 @@ exports.checkOut = async (req, res) => {
 };
 
 // Function to calculate discounted price
-function calculateDiscountedPrice(originalPrice, discountPercentage) {
+function calculateDiscountedPrice(originalPrice, discountPercentage,quantity) {
   const discountAmount = (discountPercentage / 100) * originalPrice;
   const discountedPrice = originalPrice - discountAmount;
-  return discountedPrice;
+  return discountedPrice*quantity;
 }
 
 
