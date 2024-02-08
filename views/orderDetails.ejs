@@ -68,7 +68,7 @@ rel="stylesheet"
                                 <% data[0].products.forEach(product => { %>
                                     <div class="row mb-4 ">
                                         <div class="col-md-2">
-                                           <% if(data[0].products.length==1) {%>
+                                           <% if(data[0].products.length==1&&!product.cartQuantity) {%>
                                             <img src="images/<%= product.prd_image[0] %>" style="width: 150px; height: 150px;" alt="img">
                                             <% }else{ %>
                                                 <img src="images/<%= product.prd_image %>" style="width: 150px; height: 150px;" alt="img">
@@ -88,9 +88,10 @@ rel="stylesheet"
     
                                             <p style="line-height: 1.2; font-size: 15px; font-weight: bolder;"><span style="font-weight: bolder;">Price:</span> 
                                                 <% if(product.offer!==null) { %>
+                                                    
                                                 ₹<%= (((product.price) * (1 - product.discount / 100)) * product.cartQuantity).toLocaleString('en-IN') %>
                                                 <% }else{ %>
-                                                    ₹<%= (((product.price) * (1 - product.offer.discount / 100)) * product.cartQuantity).toLocaleString('en-IN') %>
+                                                    ₹<%= (((product.price) * (1 - product.discount / 100)) * product.cartQuantity).toLocaleString('en-IN') %>
                                                     <% } %>
                                             </p>
     
