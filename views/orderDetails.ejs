@@ -68,7 +68,11 @@ rel="stylesheet"
                                 <% data[0].products.forEach(product => { %>
                                     <div class="row mb-4 ">
                                         <div class="col-md-2">
-                                            <img src="images/<%= product.prd_image %>" style="width: 150px; height: 150px;" alt="img">
+                                           <% if(data[0].products.length==1) {%>
+                                            <img src="images/<%= product.prd_image[0] %>" style="width: 150px; height: 150px;" alt="img">
+                                            <% }else{ %>
+                                                <img src="images/<%= product.prd_image %>" style="width: 150px; height: 150px;" alt="img">
+                                                <% } %>
                                         </div>
                                         <div class="col-md-8">
                                             <h5 class="mb-4" style="font-size: 25px; font-weight: bolder; font-family: 'Afacad';"><%= product.pname %></h5>

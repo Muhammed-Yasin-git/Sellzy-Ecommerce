@@ -1,28 +1,26 @@
-const productDb = require("../model/productsmodel")
-const cartDb = require("../model/cartmodel")
+const productDb = require("../model/productsmodel");
+const cartDb = require("../model/cartmodel");
 
-const fs = require('fs');
-
-
-
-
+const fs = require("fs");
 
 exports.findproducts = (req, res) => {
-  productDb.find({ active: true })
-    .then(products => {
-      res.send(products)
-    }).catch(err => {
-      res.send({ message: "error while retreiving product information" })
+  productDb
+    .find({ active: true })
+    .then((products) => {
+      res.send(products);
     })
-}
+    .catch((err) => {
+      res.send({ message: "error while retreiving product information" });
+    });
+};
 // Route handler for adding a new product with multiple images
 exports.newproduct = (req, res) => {
   if (!req.files || req.files.length === 0) {
-    return res.status(400).send('No file(s) uploaded.');
+    return res.status(400).send("No file(s) uploaded.");
   }
 
   // Handle multiple uploaded files
-  const images = req.files.map(file => file.filename);
+  const images = req.files.map((file) => file.filename);
 
   const product = new productDb({
     pname: req.body.pname,
@@ -36,17 +34,14 @@ exports.newproduct = (req, res) => {
 
   product
     .save()
-    .then(data => {
+    .then((data) => {
       console.log(data);
       res.redirect("/admin-products");
     })
-    .catch(err => {
+    .catch((err) => {
       res.send(err);
     });
 };
-
-
-
 
 exports.updateproduct = (req, res) => {
   const id = req.body.productId;
@@ -62,37 +57,40 @@ exports.updateproduct = (req, res) => {
           price: req.body.price,
           discount: req.body.discount,
           stock: req.body.stock,
-        }
+        },
       }
     )
-    .then(data => {
+    .then((data) => {
       // Step 1: Update stock in productDb, now update stock in cartDb
 
       // Step 2: Find cart data based on the provided product ID
-      cartDb.updateMany(
-        { prId: id },
-        {
-          $set: {
-            pname: req.body.productName,
-            description: req.body.description,
-            price: req.body.price,
-            category: req.body.category,
-            stock: req.body.stock,
+      cartDb
+        .updateMany(
+          { prId: id },
+          {
+            $set: {
+              pname: req.body.productName,
+              description: req.body.description,
+              price: req.body.price,
+              category: req.body.category,
+              stock: req.body.stock,
+            },
           }
-        }
-      )
-        .then(cartUpdateData => {
+        )
+        .then((cartUpdateData) => {
           // Step 3: Redirect to the admin-products page or handle success as needed
-          res.send("<script>alert('Data updated successfully!'); window.location='/admin-products';</script>");
+          res.send(
+            "<script>alert('Data updated successfully!'); window.location='/admin-products';</script>"
+          );
         })
-        .catch(cartUpdateErr => {
+        .catch((cartUpdateErr) => {
           res.send(cartUpdateErr);
         });
     })
-    .catch(err => {
+    .catch((err) => {
       res.send(err);
     });
-}
+};
 
 exports.uploadimage = async (req, res) => {
   const id = req.query.id;
@@ -105,7 +103,7 @@ exports.uploadimage = async (req, res) => {
     .catch((err) => {
       res.send(err);
     });
-}
+};
 
 exports.deleteImage = (req, res) => {
   const productId = req.query.id;
@@ -116,7 +114,7 @@ exports.deleteImage = (req, res) => {
     return;
   }
 
-  const imagePath = `images/${imageName}`;  // Remove the space at the beginning
+  const imagePath = `images/${imageName}`; // Remove the space at the beginning
 
   productDb
     .updateOne({ _id: productId }, { $pull: { prd_image: imageName } })
@@ -147,9 +145,9 @@ exports.softdelete = (req, res) => {
     .catch((err) => {
       res.send(err);
     });
-}
+};
 
-exports.deleteProduct = (req, res) => {
+(exports.deleteProduct = (req, res) => {
   const productId = req.query.id;
 
   productDb
@@ -198,8 +196,8 @@ exports.deleteProduct = (req, res) => {
       console.error("Error fetching product data:", err);
       res.send("Error fetching product data");
     });
-},
-  exports.restoreProduct = async (req, res) => {
+}),
+  (exports.restoreProduct = async (req, res) => {
     try {
       const id = req.query.id;
       console.log(id);
@@ -220,10 +218,4 @@ exports.deleteProduct = (req, res) => {
           err.message || "Error Occurred while retrieving product information",
       });
     }
-  }
-
-
-
-
-
-
+  });

@@ -42,7 +42,7 @@ app.use("/", require("./server/routes/userRouter"))
 
 app.use('/', require('./server/routes/adminRouter'))
 
-app.use(errorMiddleware)
+// app.use(errorMiddleware)
 
 app.use('*', (req, res) => {
     res.status(404).render("error404");

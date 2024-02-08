@@ -17,8 +17,13 @@
                                 <div class="row gy-3 mb-2">
                                     <div class="col-2">
                                         <a href="/order-details?orderId=<%= data[i]._id %>&productId=<%= firstProduct._id %>">
-                                            <img src="images/<%= firstProduct.prd_image %>"
+                                            <% if(data[i].products.length===1) {%>
+                                            <img src="images/<%= firstProduct.prd_image[0] %>"
                                                 class="img-fluid" alt="<%= firstProduct.pname %>" />
+                                                <% }else{ %>
+                                                    <img src="images/<%= firstProduct.prd_image %>"
+                                                    class="img-fluid" alt="<%= firstProduct.pname %>" />
+                                                    <% } %>
                                         </a>
                                     </div>
                                     <div class="col-8 d-flex flex-column align-items-start d-flex justify-content-center">

@@ -22,10 +22,10 @@ const CouponSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  expired:{
+  expired: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const Coupon = new mongoose.model("Coupon", CouponSchema);
