@@ -119,7 +119,7 @@ exports.userHome = async (req, res) => {
     const catFilter = req.query.catFilter;
     console.log("User email:", userEmail);
 
-    const products = await productDb.find(); // Fetch products directly from the database
+    const products = await productDb.find().populate("offer"); // Fetch products directly from the database
 
     const catData = await categorydb.find({ active: true });
 
@@ -136,7 +136,7 @@ exports.userHome = async (req, res) => {
     }
   } catch (error) {
     console.error("Error:", error);
-    res.render("user_home", { products: [], users: null, searchQuery, catFilter, categories: [], error: "Error fetching data" });
+    res.render("user_home", { products: [], users: null, searchQuery, catFilter, categories: [], error: "Error fetching data" }).status(500);
   }
 };
 
@@ -694,18 +694,28 @@ exports.checkOut = async (req, res) => {
     let totalprice;
     const index = req.query.id || 0;
     const prId = req.query.prId;
+    let discountedPrice;
 
     console.log(totalprice + " from checkout 2");
 
     if (prId) {
-      const productData = await productDb.findById(prId);
-      const discountedPrice = productData.price - (productData.price * (productData.discount / 100));
+      const productData = await productDb.findById(prId).populate("offer");
+      if(productData.offer!==null){
+
+         discountedPrice = productData.price - (productData.price * (productData.offer.discount / 100));
+      }else{
+
+         discountedPrice = productData.price - (productData.price * (productData.discount / 100));
+      }
+      console.log(discountedPrice);
 
       totalprice = discountedPrice
+      req.session.newPrice = totalprice
     } else {
       const cartData = await cartDb.find({ email: email });
       // Assuming cartData is an array, use reduce to calculate the total discounted price
-      totalprice = cartData.reduce((acc, item) => acc + calculateDiscountedPrice(item.price, item.discount,item.cartQuantity), 0);
+      totalprice = cartData.reduce((acc, item) =>  acc + calculateDiscountedPrice(item.price, item.discount,item.cartQuantity), 0);
+    
       req.session.newPrice = totalprice;
     }
 
@@ -719,6 +729,7 @@ exports.checkOut = async (req, res) => {
         a: index,
       }, (err, html) => {
         if (err) {
+          console.log(err);
           return res.send("Internal Server error " + "1");
         }
         delete req.session.discountApplied;
@@ -951,7 +962,7 @@ exports.ourstore = (req, res) => {
   }
 
 
-  productDb.find(filter)
+  productDb.find(filter).populate("offer")
     .then(alldata => {
       console.log(alldata);
       categorydb.find({ active: true })
@@ -1011,10 +1022,11 @@ exports.promoCode = async (req, res) => {
       }
 
       // price = price - 20;
-      const discountedPrice = price - (price * data.discountPercentage) / 100;
+      const discountedPrice = Math.ceil(price - (price * data.discountPercentage) / 100);
       console.log(discountedPrice, "dic");
-      console.log("discount price ");
-      req.session.couponApplied = discountedPrice;
+      req.session.newPrice = discountedPrice;
+      console.log(req.session.newPrice,"luffyyy");
+
       req.session.discountApplied = true;
       req.session.discountPercentage = data.discountPercentage; // Set the flag to indicate discount applied
       return res.json({

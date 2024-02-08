@@ -14,6 +14,7 @@ const productController = require("../controller/productController")
 const categoryController = require("../controller/categoryController")
 const orderController = require("../controller/orderController")
 const couponController = require("../controller/couponController")
+const offerController = require("../controller/offerController")
 
 
 
@@ -61,6 +62,16 @@ router.post('/save-coupon',middlewares.authenticateMiddleware,couponController.s
 router.get('/delete-coupon',middlewares.authenticateMiddleware,couponController.deleteCoupon)
 router.get('/expired-coupon',middlewares.authenticateMiddleware,couponController.expiredCoupon)
 
+router.get("/sales-report", adminController.salesReport);
+
+
+router.get("/admin-offers",adminServices.offers)
+router.get("/addCategoryOffer",offerController.addOffer)
+router.get("/addProductOffer",offerController.addProductOffer)
+router.post("/api/addAdminoffer",offerController.saveOffer)
+router.post("/api/adminProductOffer",offerController.ProductOffer)
+router.post("/delete-adminProductOffer",offerController.deleteOffer)
+
 
 router.post('/adminlogin',middlewares.checkNotAuthenticateAdmin,adminServices.isAdmin)
 router.get('/api/users',adminController.find)
@@ -70,9 +81,6 @@ router.get('/admin-logout',adminController.logout)
 
 
 router.post('/api/update-product', upload.single('prd_image'), productController.updateproduct)
-
-
-
 
 
 

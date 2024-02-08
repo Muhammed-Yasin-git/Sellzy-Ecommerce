@@ -41,7 +41,8 @@ exports.resetpassword = (req,res)=>{
 
 exports.productdetails=(req,res)=>{
     const id = req.query.productId
-    productDb.findOne({_id:id})
+    productDb.findOne({_id:id}).populate("offer")
+
     .then(data=>{
         console.log(data);
         res.render('productdetails',{products:data,email:req.session.email})

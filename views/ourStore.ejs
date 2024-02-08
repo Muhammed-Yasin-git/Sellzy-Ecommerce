@@ -379,10 +379,19 @@ rel="stylesheet"
             <% for(let i=0; i < products.length; i++) { %>
               <div class="col-lg-4 col-md-6 col-sm-6 d-flex"  style="cursor: pointer;">
                 <div class="card w-100 my-2" style="box-shadow: 0 10px 36px rgba(0, 0, 0, 0.24);">
-                  <div class="discount-badge position-absolute top-0 start-0 mt-2 px-1 py-0"
-                  style="background-color: #f6f16a; color: #131921; border-radius: 90px; margin-left: 8px; font-size: 0.65rem; font-weight: bolder;">
-                  <%= products[i].discount %>% OFF
-                </div>
+                  <% if(!products[i].offer) {%>
+                    <div class="discount-badge position-absolute top-0 start-0 mt-2 px-1 py-0"
+                                          style="background-color: #f6f16a; color: #131921; border-radius: 90px; margin-left: 8px; font-size: 0.65rem; font-weight: bolder;">
+                                        
+                                          <%= products[i].discount %>% OFF
+                                         
+                                        </div>
+                                        <% }else { %>
+                                          <div class="discount-badge position-absolute top-0 start-0 mt-2 mb-3  px-0 py-0" style=" margin-left: 5%;">
+                                            <span class=" badge rounded-pill bg-success text-white" style="font-size: 10px;">Special offer:
+                                              <%=products[i].offer.discount %>%</span>
+                                            </div>
+                                          <% } %>
                     <div style="border: 50px white; width: 100%; display: flex; justify-content: center;" onclick="userdetails('<%=products[i]._id%>')">
                       <img src="images/<%=products[i].prd_image[0]%>"
                         style=" aspect-ratio: 1 / 1; width: 190px; margin-top:30px;margin-bottom: 15px; height: 210px; object-fit: contain;"
@@ -401,10 +410,15 @@ rel="stylesheet"
                         <p class="card-text" style="margin-left: -8px; opacity: .7; margin-bottom: 6px;">
                         </p>
                         <h1>
+                          <% if(products[i].offer) {%>
+                            <% var discount = products[i].offer.discount %>
+                            <% var Odiscount = products[i].price * discount / 100 %>
+                            <% var showPrice= products[i].price-Odiscount %>
+                            <% }else{ %>
                             <% var discount = products[i].discount %>
                             <% var Odiscount = products[i].price * discount / 100 %>
                             <% var showPrice= products[i].price-Odiscount %>
-                        
+                        <% } %>
                           <p class="card-text" style="margin-left: -8px; font-weight: bolder; font-size: 20px;">₹<%=Math.floor(showPrice).toLocaleString('en-IN')  %>
                               <span
                                 style="font-size: 10px; text-decoration: line-through; font-weight: bolder; opacity: .7;">₹<%=products[i].price.toLocaleString('en-IN') %></span>

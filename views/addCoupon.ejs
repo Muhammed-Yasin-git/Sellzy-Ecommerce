@@ -20,7 +20,7 @@
                         <h3>Add Coupon</h3>
 
                         <a href="/add-coupon"> <button class="btn btn-rounded"
-                                style="background-color: #131921 ; color: white;"> <i class='bx bx-exit'></i>Go
+                                style="background-color: #F0EEB3 ; color: black;"> <i class='bx bx-exit'></i>Go
                                 Back</button></i></a>
                     </div>
                     <div class="container coupon-container">
@@ -30,26 +30,26 @@
                         <form action="/save-coupon" method="post" onsubmit="return validateForm()">
                             <div class="form-group">
                                 <label for="coupon-code">Coupon Code</label>
-                                <input type="text" class="form-control" id="coupon-code" placeholder="Enter Coupon Code" name="couponCode" required>
+                                <input type="text" class="form-control mt-2" id="coupon-code" placeholder="Enter Coupon Code" name="couponCode" required>
                                 <small id="coupon-code-error" class="text-danger"></small>
                             </div>
                             <div class="form-group">
-                                <label for="discount">Discount (%)</label>
-                                <input type="number" class="form-control" id="discount" placeholder="Enter Discount Percentage" name="discount" required>
+                                <label class="mt-2" for="discount">Discount (%)</label>
+                                <input type="number" class="form-control mt-2" id="discount" placeholder="Enter Discount Percentage" name="discount" required>
                                 <small id="discount-error" class="text-danger"></small>
                             </div>
                             <div class="form-group">
-                                <label for="valid-from">Valid From</label>
-                                <input type="date" class="form-control" id="valid-from" name="validFrom" required>
+                                <label class="mt-2" for="valid-from">Valid From</label>
+                                <input type="date" class="form-control mt-2" id="valid-from" name="validFrom" required>
                                 <small id="valid-from-error" class="text-danger"></small>
                             </div>
                             <div class="form-group">
-                                <label for="valid-to">Valid To</label>
-                                <input type="date" class="form-control" id="valid-to" name="validTo" required>
+                                <label class="mt-2" for="valid-to">Valid To</label>
+                                <input type="date" class="form-control mt-2" id="valid-to" name="validTo" required>
                                 <small id="valid-to-error" class="text-danger"></small>
                             </div>
                             <h1></h1>
-                            <button type="submit" class="btn" style="background-color: #131921; color: white;">Add Coupon</button>
+                            <button type="submit" class="btn mt-4" style="background-color: #F0EEB3; color: black;">Add Coupon</button>
                         </form>
 
                     </div>
@@ -84,8 +84,8 @@
 
         // Validate Discount
         const discount = document.getElementById("discount").value;
-        if (isNaN(discount) || discount < 0 || discount > 100) {
-            document.getElementById("discount-error").textContent = "Enter a valid discount percentage (0-100).";
+        if (isNaN(discount) || discount < 0 || discount > 90) {
+            document.getElementById("discount-error").textContent = "Enter a valid discount percentage (0-90)%.";
             return false;
         }
 

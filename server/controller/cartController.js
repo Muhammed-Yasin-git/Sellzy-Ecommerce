@@ -9,11 +9,18 @@ module.exports = {
   AddToCart: (req, res) => {
     let email = req.query.email;
     let productId = req.query.id;
-
+    let discount
     console.log(email + "from cart session");
     productdb
-      .findById(productId)
+      .findById(productId).populate("offer")
       .then((productData) => {
+        if(productData.offer!==null){
+          discount = productData.offer.discount
+        }else{
+          discount = productData.discount
+
+        }
+        console.log(discount+"hpriceeee");
         if (req.session.email) {
           console.log(productData);
           const cart = new cartDb({
@@ -22,7 +29,7 @@ module.exports = {
             cartQuantity: 1,
             pname: productData.pname,
             price: productData.price,
-            discount: productData.discount,
+            discount: discount,
             description: productData.description,
             stock: productData.stock,
             prd_image: productData.prd_image,
@@ -58,7 +65,6 @@ module.exports = {
         console.log("catch 4");
       });
   },
-
   MyCart: (req, res) => {
     const email = req.session.email;
   
@@ -75,31 +81,35 @@ module.exports = {
         const productIds = cartData.map(item => item.prId);
   
         // Step 3: Find product data based on the extracted product IDs
-        productdb.find({ _id: { $in: productIds } })
+        productdb.find({ _id: { $in: productIds } }).populate("offer")
           .then(productData => {
   
             // Step 4: Loop through the product data
             productData.forEach((product, index) => {
   
               // Step 5: Find cart data for the current product
-              cartDb.findOne({ prId: product._id })
+              cartDb.findOne({email:email, prId: product._id })
                 .then(cartItem => {
   
                   // Step 6: Calculate values for the current product
-                  const discount = product.discount;
+                  const discount = product.offer!==null?product.offer.discount:product.discount;
                   const disPrice = product.price * discount / 100;
                   const showPrice1 = product.price - disPrice;
                   const count = Math.floor(showPrice1 * cartItem.cartQuantity);
+                  console.log(count);
+                  console.log(disPrice);
+                  console.log(showPrice1);
   
                   // Step 7: Accumulate the sum inside the loop
                   sum += count;
-  
+  console.log(sum);
                   // Step 8: Accumulate the total discount inside the loop
-                  totalDiscount += (product.price * (product.discount / 100) * cartItem.cartQuantity);
+                  totalDiscount += (product.price * (discount / 100) * cartItem.cartQuantity);
   
                   // Step 9: Accumulate the total price without discount inside the loop
                   totalsumWithoutDiscount += (product.price * cartItem.cartQuantity);
                   req.session.newPrice = sum;
+                  console.log(req.session.newPrice);
                 })
                 .catch(err => {
                   console.error('Error finding cart item:', err);
@@ -147,7 +157,7 @@ module.exports = {
         res.status(500).send(err);
       });
   },
-  
+
 
 
 

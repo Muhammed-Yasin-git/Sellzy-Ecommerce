@@ -93,8 +93,19 @@
             >
             <% } %>
           </div>
+          <% if(products.offer!=null) {%>
+            <div class="clearfix mb-5" >
+              <span class=" float-start badge rounded-pill bg-success text-white">Special offer:
+                <%=products.offer.discount %>% off</span>
+              </div>
+              <% }else{%>
+                <div class="clearfix mb-5" >
+              <span class=" float-start badge rounded-pill bg-success text-white">Discount:
+                <%=products.discount %>%</span>
+              </div>
+           <%   } %>
 
-          <div class="mb-3">
+          <div class="mb-3" style="display: none;">
             <p
               class="card-text"
               style="
@@ -104,10 +115,10 @@
                 font-weight: bolder;
               "
             >
-              -<%=products.discount%>% off
+              <%=products.discount%>% off
             </p>
             <p
-              class="card-text"
+              
               style="
                 color: rgb(0, 0, 0);
                 padding: 0%;
@@ -115,15 +126,22 @@
                 text-decoration: line-through;
               "
             >
-              ₹<%= products.price.toLocaleString('en-IN') %>
+              ₹<%= (products.price).toLocaleString('en-IN') %>
             </p>
           </div>
           <div class="mb-3">
+            
             <span class="h5" style="color: crimson">
+              <%if(products.offer!=null) {%>
+                ₹<%= (products.price - (products.price * (products.offer.discount /
+                100))).toLocaleString('en-IN') %>
+                <% }else{ %>
               ₹<%= (products.price - (products.price * (products.discount /
               100))).toLocaleString('en-IN') %>
+              <% } %>
             </span>
-            <span style="color: #443d3d">/per box</span>
+            <span class="" style="color: gray; font-weight: bolder; text-decoration: line-through; font-size: 13px;" > ₹<%= products.price.toLocaleString('en-IN') %></span>
+            <span style="color: #443d3d"></span>
           </div>
 
           <p><%=products.description%></p>

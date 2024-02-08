@@ -50,6 +50,11 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    offer: {
+        type: mongoose.Types.ObjectId,
+        default: null,
+        ref: 'Offer'
+    },
     active:{
         type:String,
         default:true

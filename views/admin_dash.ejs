@@ -29,10 +29,11 @@
 						</li>
 					</ul>
 				</div>
-				<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
+				<a href="#" class="btn-download" data-bs-toggle="modal" data-bs-target="#dateRangeModal">
+					<i class='bx bxs-cloud-download'></i>
 					<span class="text">Download PDF</span>
 				</a>
+				
 			</div>
 
 			<ul class="box-info">
@@ -88,10 +89,123 @@
 	</section>
 	<!-- CONTENT -->
 	
+	 <!-- Replace your existing modal code with this Bootstrap modal code -->
+	 <div class="modal fade" id="dateRangeModal" tabindex="-1" aria-labelledby="dateRangeModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="dateRangeModalLabel">Date Range</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			  <form id="dateRangeForm">
+				<div class="mb-3">
+				  <label for="startDate" class="form-label">Start Date:</label>
+				  <input type="date" class="form-control" id="startDate" required
+					max="<%= new Date().toISOString().split('T')[0] %>">
+				</div>
+				<div class="mb-3">
+				  <label for="endDate" class="form-label">End Date:</label>
+				  <input type="date" class="form-control" id="endDate" required
+					max="<%= new Date().toISOString().split('T')[0] %>">
+				</div>
+				<button type="button" class="btn btn-primary" onclick="downloadPdfWithDateRange()">Download</button>
+				<h1></h1>
+				<button type="button" class="btn btn-secondary" onclick="downloadPdfForToday()">Today's Sales
+				  Report</button>
+			  </form>
+			</div>
+		  </div>
+		</div>
+	  </div>
+  
 	  
+	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ratOyhjQIINk+CD2EAgjlEqUC5FFtui9cU4J+sk9BbcE3DE3ZcdVo6YQZ5y4bSSUn"
+		crossorigin="anonymous"></script>
+	
+	  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+		integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.0/jquery.waypoints.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/jquery.counterup@2.1.0/jquery.counterup.min.js"></script>
+	  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+	  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+		integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+	  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.0/jquery.waypoints.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/jquery.counterup@2.1.0/jquery.counterup.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+
+<script>
+    function showDateRangePopup() {
+      // No need to manually show the modal here
+    }
+
+    function closeDateRangeModal() {
+      // Close the Bootstrap modal
+      $('#dateRangeModal').modal('hide');
+    }
+
+    function downloadPdfWithDateRange() {
+      var startDate = document.getElementById("startDate").value;
+      var endDate = document.getElementById("endDate").value;
+
+      // Perform validation
+      if (!startDate || !endDate) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Both start date and end date are required.",
+ 
+        });
+
+      
+        return;
+      }
+
+      if (new Date(endDate) <= new Date(startDate)) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "End date must be greater than the start date.",
+ 
+        });
+        return;
+      }
+
+      // Close the modal after clicking the download button
+      closeDateRangeModal();
+
+      // Perform your download action with startDate and endDate
+      window.location.href = `/sales-report?startDate=${startDate}&endDate=${endDate}`;
+    }
+    function downloadPdfForToday() {
+      // Get the current date
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+      var yyyy = today.getFullYear();
+
+      var currentDate = yyyy + '-' + mm + '-' + dd;
+
+      // Perform your download action with the current date
+      window.location.href = `/sales-report?date=${currentDate}`;
+
+      // Close the modal after clicking the download button
+      closeDateRangeModal();
+    }
+  </script>
+
 
 <script>
 	window.addEventListener("load", () => {

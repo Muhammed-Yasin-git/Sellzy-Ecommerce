@@ -30,11 +30,11 @@ router.post('/update-address',userController.updateAddress)
 router.post('/make-default',userController.makeDefault)
 
 
-router.get('/edit-profile',middlewares.userCheckMiddleware,userServices.editprofile) 
+router.get('/edit-profile',middlewares.userCheckMiddleware,middlewares.userCheckMiddleware,userServices.editprofile) 
 router.post('/update-profile',userController.updateprofile) 
-router.get('/change-password/confirm',userServices.oldPassword) 
+router.get('/change-password/confirm',middlewares.userCheckMiddleware,userServices.oldPassword) 
 router.post('/verify-password',userController.verifyPassword) 
-router.get('/change-password',userServices.changePassword) 
+router.get('/change-password',middlewares.userCheckMiddleware,userServices.changePassword) 
 router.post('/new-password',userController.newPassword) 
 
 
@@ -65,13 +65,13 @@ router.post('/payment-success',orderController.paymentSuccess)
 
 
 
-router.get('/forget-password',userServices.forgot)
-router.get('/reset-password-otp',userServices.otp1)
+router.get('/forget-password',middlewares.userCheckMiddleware,userServices.forgot)
+router.get('/reset-password-otp',middlewares.userCheckMiddleware,userServices.otp1)
 
 
 router.post('/verify-otp',userController.otpReset)
-router.get('/verify-otp',userServices.otp)
-router.get('/reset-password-form',userServices.resetpassword)
+router.get('/verify-otp',middlewares.userCheckMiddleware,userServices.otp)
+router.get('/reset-password-form',middlewares.userCheckMiddleware,userServices.resetpassword)
 router.post('/send-otp',userController.sendOtp)
 router.post('/otp-verify',userController.otpverify)
 router.post('/forgot-password',userController.forgotpassword)
@@ -95,5 +95,7 @@ router.get("/cart/update", cartController.cartUpdate); // add user to another co
 // add user to another collction
 
 
+
+  
 
 module.exports = router

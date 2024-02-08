@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const connectDB = require('./server/database/connection');
 const morgan = require("morgan");
-
+const errorMiddleware=require('./middlewares/errorHandlingMiddleware')
 
 
 const app = express()
@@ -41,5 +41,12 @@ app.use("/", require("./server/routes/userRouter"))
 
 
 app.use('/', require('./server/routes/adminRouter'))
+
+app.use(errorMiddleware)
+
+app.use('*', (req, res) => {
+    res.status(404).render("error404");
+  });
+
 
 app.listen(PORT, () => console.log(`Server is Running on http://localhost:${PORT}`)) 

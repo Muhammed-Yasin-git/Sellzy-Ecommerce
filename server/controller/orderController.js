@@ -22,7 +22,7 @@ const razorpayInstance = new Razorpay({
   
   
         
-        const Price = data.price - (data.price * (data.discount / 100));
+        const Price = req.session.newPrice
         
         
         console.log("Calculated Price:", Price);

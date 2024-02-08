@@ -5,6 +5,7 @@ const path = require('path');
 const productDb = require("../model/productsmodel")
 const categorydb = require("../model/categorymodel")
 const orderdb = require("../model/ordermodel")
+const offerDb = require("../model/offermodel")
 
 
 exports.adminlogin = (req,res)=>{
@@ -211,4 +212,35 @@ exports.isAdmin = (req, res) => {
 
   }
 
- 
+
+  
+
+exports.offers = (req,res)=>{
+    res.render("adminOffer")
+}
+
+exports.offers = async (req, res) => {
+
+    try {
+  
+      const currentDate = new Date();
+  
+      await offerDb.deleteMany({ expiredate: { $lt: currentDate } });
+  
+  
+      await offerDb.find()
+  
+      .then(data=>{
+        res.render("adminOffer",{offers:data})
+      })
+  
+      
+  
+    } catch (err) {
+      console.log(err);
+      res.send(err)
+    }
+  
+  
+  }
+   
