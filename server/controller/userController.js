@@ -244,7 +244,7 @@ const sendOtpMail = async (req, res) => {
       email: req.session.email,
       otp: otp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 20000,
+      expiresAt: Date.now() + 60000,
     });
     const data = await newOtp.save();
     // req.session.otpTd=data._id;
@@ -420,7 +420,7 @@ const forgotSendOtpMail = async (req, res, nemail) => {
       email: nemail,
       otp: otp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 20000,
+      expiresAt: Date.now() + 60000,
     });
 
     const data = await newOtp.save();
