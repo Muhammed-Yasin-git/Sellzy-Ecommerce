@@ -134,22 +134,16 @@ router.get(
 router.post("/payment-success", orderController.paymentSuccess);
 
 router.get(
-  "/forget-password",
-  middlewares.userCheckMiddleware,
-  userServices.forgot
+  "/forget-password", userServices.forgot
 );
 router.get(
-  "/reset-password-otp",
-  middlewares.userCheckMiddleware,
-  userServices.otp1
+  "/reset-password-otp",userServices.otp1
 );
 
 router.post("/verify-otp", userController.otpReset);
-router.get("/verify-otp", middlewares.userCheckMiddleware, userServices.otp);
+router.get("/verify-otp", userServices.otp);
 router.get(
-  "/reset-password-form",
-  middlewares.userCheckMiddleware,
-  userServices.resetpassword
+  "/reset-password-form", userServices.resetpassword
 );
 router.post("/send-otp", userController.sendOtp);
 router.post("/otp-verify", userController.otpverify);
