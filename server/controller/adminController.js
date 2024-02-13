@@ -1,6 +1,10 @@
 const Userdb = require("../model/usermodel");
 const orderDb = require("../model/ordermodel");
+const fs = require("fs");
+const path = require("path");
 const CsvParser = require("json2csv").Parser;
+const ejs = require("ejs")
+const puppeteer = require("puppeteer")
 
 exports.find = (req, res) => {
   Userdb.find()
@@ -149,72 +153,256 @@ exports.logout = (req, res) => {
     res.status(500).send("Internal server err");
   }
 }),
-  (exports.salesReport = async (req, res) => {
+  // (exports.salesReport = async (req, res) => {
+  //   try {
+  //     let totalOrders;
+  //     const startDate = new Date(req.query.startDate);
+  //     const endDate = new Date(req.query.endDate);
+
+  //     totalOrders = await orderDb.aggregate([
+  //       {
+  //         $match: {
+  //           orderDate: {
+  //             $gte: startDate,
+  //             $lte: endDate,
+  //           },
+  //         },
+  //       },
+  //       { $unwind: "$products" },
+  //       {
+  //         $group: {
+  //           _id: "$_id",
+  //           count: { $sum: 1 },
+  //           products: { $push: "$products" }, // Collect products for each order
+  //         },
+  //       },
+  //       { $project: { count: 1, products: 1 } },
+  //     ]);
+
+  //     const totalUsers = await Userdb.countDocuments();
+  //     const totalSales = await orderDb.aggregate([
+  //       {
+  //         $match: {
+  //           orderDate: {
+  //             $gte: startDate,
+  //             $lte: endDate,
+  //           },
+  //         },
+  //       },
+  //       { $unwind: "$products" },
+  //       {
+  //         $group: {
+  //           _id: null,
+  //           sum: { $sum: "$products.price" },
+  //         },
+  //       },
+  //     ]);
+  //     const csvFields = ["Order ID", "Product Name", "Product Price"];
+  //     const csvHeader = csvFields.join(",") + "\n";
+  //     let csvValues = "";
+  //     totalOrders.forEach((order) => {
+  //       order.products.forEach((product) => {
+  //         csvValues += `${order._id},"${product.pname}",${product.price}\n`;
+  //       });
+  //     });
+  //     const totalOrdersCount = totalOrders.reduce(
+  //       (acc, order) => acc + order.count,
+  //       0
+  //     );
+  //     // Add the totals to the CSV values
+  //     csvValues += `${totalOrdersCount},${totalUsers},${
+  //       totalSales[0]?.sum || 0
+  //     }\n`;
+  //     const csvData = csvHeader + csvValues;
+  //     res.setHeader("Content-Type", "text/csv");
+  //     res.setHeader("Content-Disposition", "attachment;filename=salesData.csv");
+  //     res.status(200).send(csvData);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send("Internal Server Error");
+  //   }
+  // });
+
+
+  ///////////////////////////////////////////
+
+
+  exports.salesReport= async (req, res) => {
+    let renderedTemplate;
     try {
-      let totalOrders;
-      const startDate = new Date(req.query.startDate);
-      const endDate = new Date(req.query.endDate);
-
-      totalOrders = await orderDb.aggregate([
-        {
-          $match: {
-            orderDate: {
-              $gte: startDate,
-              $lte: endDate,
-            },
-          },
-        },
-        { $unwind: "$products" },
-        {
-          $group: {
-            _id: "$_id",
-            count: { $sum: 1 },
-            products: { $push: "$products" }, // Collect products for each order
-          },
-        },
-        { $project: { count: 1, products: 1 } },
-      ]);
-
-      const totalUsers = await Userdb.countDocuments();
-      const totalSales = await orderDb.aggregate([
-        {
-          $match: {
-            orderDate: {
-              $gte: startDate,
-              $lte: endDate,
-            },
-          },
-        },
-        { $unwind: "$products" },
-        {
-          $group: {
-            _id: null,
-            sum: { $sum: "$products.price" },
-          },
-        },
-      ]);
-      const csvFields = ["Order ID", "Product Name", "Product Price"];
-      const csvHeader = csvFields.join(",") + "\n";
-      let csvValues = "";
-      totalOrders.forEach((order) => {
-        order.products.forEach((product) => {
-          csvValues += `${order._id},"${product.pname}",${product.price}\n`;
-        });
+      const browser = await puppeteer.launch({ 
+        headless: "new",
       });
-      const totalOrdersCount = totalOrders.reduce(
-        (acc, order) => acc + order.count,
-        0
-      );
-      // Add the totals to the CSV values
-      csvValues += `${totalOrdersCount},${totalUsers},${
-        totalSales[0]?.sum || 0
-      }\n`;
-      const csvData = csvHeader + csvValues;
-      res.setHeader("Content-Type", "text/csv");
-      res.setHeader("Content-Disposition", "attachment;filename=salesData.csv");
-      res.status(200).send(csvData);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
+
+      const order = await getSalesReport(req.body.fromDate, req.body.toDate, req.body.full);
+      //for pdf download
+      
+      if(req.body.type === 'pdf'){
+
+        const salesTemplate = fs.readFileSync(
+          path.join(__dirname, "../../views/salesPDF.ejs"),
+          "utf-8"
+        );
+        const totalOrder = await orderDb.countDocuments({ "status": "pending" });
+
+        const amountOfUsers = await Userdb.find({}).count();
+        const totalSales = await orderDb.aggregate([
+          { $group: { _id: null, sum: { $sum: "$price" } } },
+        ]);
+        const totalSalesAmount = totalSales.length > 0 ? totalSales[0].sum : 0;;
+
+          orderDb.find()
+          .then(data=>{
+            console.log(data); 
+           renderedTemplate = ejs.render(salesTemplate, { order:data, fromDate: req.body.fromDate, toDate: req.body.toDate, total: req.body.full,totalSalesAmount:totalSalesAmount, });
+          })
+        
+
+        const page = await browser.newPage();
+
+        await page.setContent(renderedTemplate);
+
+        const pdfBuffer = await page.pdf({
+          format: 'A4',
+        });
+
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=salesReport.pdf");
+
+        res.end(pdfBuffer);
+
+        await browser.close();
+        return;
+      }
+     
+            let totalOrders;
+            const startDate = new Date(req.body.fromDate);
+            const endDate = new Date(req.body.toDate);
+      totalOrders = await orderDb.aggregate([
+              {
+                $match: {
+                  orderDate: {
+                    $gte: startDate,
+                    $lte: endDate,
+                  },
+                },
+              },
+              { $unwind: "$products" },
+              {
+                $group: {
+                  _id: "$_id",
+                  count: { $sum: 1 },
+                  products: { $push: "$products" }, // Collect products for each order
+                },
+              },
+              { $project: { count: 1, products: 1 } },
+            ]);
+      
+            const totalUsers = await Userdb.countDocuments();
+            const totalSales = await orderDb.aggregate([
+              {
+                $match: {
+                  orderDate: {
+                    $gte: startDate,
+                    $lte: endDate,
+                  },
+                },
+              },
+              { $unwind: "$products" },
+              {
+                $group: {
+                  _id: null,
+                  sum: { $sum: "$products.price" },
+                },
+              },
+            ]);
+            const csvFields = ["Order ID", "Product Name", "Product Price"];
+            const csvHeader = csvFields.join(",") + "\n";
+            let csvValues = "";
+            totalOrders.forEach((order) => {
+              order.products.forEach((product) => {
+                csvValues += `${order._id},"${product.pname}",${product.price}\n`;
+              });
+            });
+            const totalOrdersCount = totalOrders.reduce(
+              (acc, order) => acc + order.count,
+              0
+            );
+            // Add the totals to the CSV values
+            csvValues += `${totalOrdersCount},${totalUsers},${
+              totalSales[0]?.sum || 0
+            }\n`;
+            const csvData = csvHeader + csvValues;
+            res.setHeader("Content-Type", "text/csv");
+            res.setHeader("Content-Disposition", "attachment;filename=salesReport.csv");
+            res.status(200).send(csvData);
+          } catch (err) {
+      console.log(err);
+      res.status(500).send("Internal server err");
     }
-  });
+  }
+
+  /////////////////////////////////////\
+
+  async function getSalesReport(fromDate, toDate, full) {
+    try {
+        const agg = [
+            {
+              $unwind: {
+                path: "$products",
+              },
+            },  
+            {
+              $sort: {
+                orderDate: -1,
+              },
+            },
+        ];
+        // get all details of sales report withn the given dates
+
+        if (!full) {
+            agg.splice(0, 0, {
+                $match: {
+                    $and: [
+                        {
+                            orderDate: { $gte: new Date(fromDate) }
+                        },
+                        {
+                            orderDate: { $lte: new Date(new Date(toDate).getTime() + 1 * 24 * 60 * 60 * 1000) }
+                        }
+                    ]
+                }
+            });
+        }
+        
+        return await orderDb.aggregate(agg);
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+// //////////////////////////////////////
+
+async function getAllDashCount() {
+  try {
+    // Returns total user count
+    const totalOrder = await orderDb.countDocuments({ "status": "pending" });
+
+    const amountOfUsers = await Userdb.find({}).count();
+    const totalSales = await orderDb.aggregate([
+      { $group: { _id: null, sum: { $sum: "$price" } } },
+    ]);
+
+    const totalSalesAmount = totalSales.length > 0 ? totalSales[0].sum : 0;;
+
+    // Return an object with all counts for admin dashboard
+    return {
+        userCount:amountOfUsers,
+        newOrders: totalOrder,
+        tSalary: totalSalesAmount,
+    }
+} catch (err) {
+    throw err;
+}
+}

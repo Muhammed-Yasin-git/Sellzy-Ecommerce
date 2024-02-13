@@ -24,6 +24,9 @@ exports.create = (req, res) => {
   }
 
   // Validate email, mobile, etc.
+  // if(req.body.mobile>10){
+  //   res.send("mobile no must be ten digits")
+  // }
 
   // Hash the password
   bcrypt.hash(req.body.password, 10).then((hashedPassword) => {

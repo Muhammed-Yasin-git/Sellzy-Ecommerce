@@ -9,11 +9,10 @@ exports.addOffer = (req, res) => {
   });
 };
 exports.addProductOffer = (req, res) => {
-  categoryDb
-    .find({ active: true })
+  productDb.find({ active: true })
     .then((data) => {
       console.log(data);
-      res.render("addProductOffer", { category: data });
+      res.render("addProductOffer", { products: data });
     })
     .catch((err) => {
       res.status(500);
@@ -55,10 +54,10 @@ exports.saveOffer = async (req, res) => {
 exports.ProductOffer = async (req, res) => {
   try {
     console.log(req.body);
-    const { pname, discount, expiredDate } = req.body;
+    const { products, discount, expiredDate } = req.body;
 
     let data = new offerDb({
-      pname: pname,
+      pname: products,
       discount: discount,
       expiredate: expiredDate,
     });

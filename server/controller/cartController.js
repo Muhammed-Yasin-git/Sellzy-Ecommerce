@@ -35,6 +35,14 @@ module.exports = {
             catStatus: productData.catStatus,
             unlist: productData.unlist,
           });
+
+          productDb.find()
+          .then(data=>{
+            if(data.stock>productData.stock){
+              
+            }
+          })
+
           cartDb.findOne({ email: email, prId: productId }).then((cartdata) => {
             if (cartdata) {
               res.redirect("/MyCart");

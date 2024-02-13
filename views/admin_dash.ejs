@@ -29,10 +29,11 @@
 						</li>
 					</ul>
 				</div>
-				<a href="#" class="btn-download" data-bs-toggle="modal" data-bs-target="#dateRangeModal">
+				<a href="#" class="btn-download" data-bs-toggle="modal" data-bs-target="#exampleModal">
 					<i class='bx bxs-cloud-download'></i>
 					<span class="text">Download PDF</span>
 				</a>
+				
 				
 			</div>
 
@@ -89,35 +90,75 @@
 	</section>
 	<!-- CONTENT -->
 	
-	 <!-- Replace your existing modal code with this Bootstrap modal code -->
-	 <div class="modal fade" id="dateRangeModal" tabindex="-1" aria-labelledby="dateRangeModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="dateRangeModalLabel">Date Range</h5>
-			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-			  <form id="dateRangeForm">
-				<div class="mb-3">
-				  <label for="startDate" class="form-label">Start Date:</label>
-				  <input type="date" class="form-control" id="startDate" required
-					max="<%= new Date().toISOString().split('T')[0] %>">
+	  <form id="downloadSalesReportPDFOrExcel" action="/sales-report" method="post">
+		<div
+		  class="modal fade"
+		  id="exampleModal"
+		  tabindex="-1"
+		  aria-labelledby="exampleModalLabel"
+		  aria-hidden="true"
+		>
+		  <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">PDF or Excel</h5>
+				<button
+				  type="button"
+				  class="btn-close"
+				  data-bs-dismiss="modal"
+				  aria-label="Close"
+				></button>
+			  </div>
+			  <div class="modal-body">
+				<div class="d-flex">
+				  <div class="form-check w-50 showErr">
+					<input value="pdf" class="form-check-input formVal" type="radio" name="type" id="flexRadioDefault1">
+					<label class="form-check-label" for="type">
+					  PDF
+					</label>
+					<p class="err"></p>
+				  </div>
+				  <div class="form-check w-50 showErr">
+					<input value="excel" class="form-check-input formVal" type="radio" name="type" id="flexRadioDefault2">
+					<label class="form-check-label" for="type">
+					  Excel
+					</label>
+				  </div>
 				</div>
-				<div class="mb-3">
-				  <label for="endDate" class="form-label">End Date:</label>
-				  <input type="date" class="form-control" id="endDate" required
-					max="<%= new Date().toISOString().split('T')[0] %>">
+				
+				<div class="d-flex">
+				  <div class="w-50 showErr">
+					<label class="d-block mb-2 mt-2" for="fromDate">From Date</label>
+					<input class="formVal" type="date" name="fromDate">
+					<p class="err"></p>
+				  </div>
+				  <div class="w-50 showErr">
+					<label class="d-block mb-2 mt-2" for="toDate">To Date</label>
+					<input class="formVal" type="date" name="toDate">
+					<p class="err"></p>
+				  </div>
 				</div>
-				<button type="button" class="btn btn-primary" onclick="downloadPdfWithDateRange()">Download</button>
-				<h1></h1>
-				<button type="button" class="btn btn-secondary" onclick="downloadPdfForToday()">Today's Sales
-				  Report</button>
-			  </form>
+			  </div>
+			  <div class="modal-footer">
+				<button
+				  type="button"
+				  class="btn btn-secondary"
+				  data-bs-dismiss="modal"
+				>
+				  Close
+				</button>
+				<button type="submit" class="btn btn-primary">
+				  Download Now
+				</button>
+			  </div>
 			</div>
 		  </div>
 		</div>
-	  </div>
+	  </form>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ratOyhjQIINk+CD2EAgjlEqUC5FFtui9cU4J+sk9BbcE3DE3ZcdVo6YQZ5y4bSSUn"
+        crossorigin="anonymous"></script>
+
   
 	  
 	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -143,68 +184,105 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<style>
+.error-message {
+	color: red;
+  }
 
+</style>
+  
 
 
 <script>
-    function showDateRangePopup() {
-      // No need to manually show the modal here
+    try {
+  const checkBox = document.querySelector('.checkBox');
+  const formVal = document.querySelectorAll(".formVal");
+  const errP = document.querySelectorAll(".err");
+  const showErr = document.querySelectorAll(".showErr");
+
+  checkBox?.addEventListener('change', () => {
+    errP[1].innerHTML = "";
+    errP[2].innerHTML = "";
+    showErr[2].classList.remove("errDiv");
+    showErr[3].classList.remove("errDiv");
+    if(checkBox.checked){
+      formVal[2].value = '';
+      formVal[3].value = '';
     }
-
-    function closeDateRangeModal() {
-      // Close the Bootstrap modal
-      $('#dateRangeModal').modal('hide');
-    }
-
-    function downloadPdfWithDateRange() {
-      var startDate = document.getElementById("startDate").value;
-      var endDate = document.getElementById("endDate").value;
-
-      // Perform validation
-      if (!startDate || !endDate) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Both start date and end date are required.",
- 
-        });
-
-      
-        return;
+  });
+  formVal?.forEach((element, i) => {
+    element?.addEventListener("change", (e) => {
+      if (i === 0 || i === 1) {
+        errP[0].innerHTML = ``;
+        showErr[i === 0 ? 1 : 0].classList.remove("errDiv");
+      } else {
+        checkBox.checked = false;
+        errP[i - 1].innerHTML = "";
       }
+      showErr[i].classList.remove("errDiv");
+    });
+  });
+  const form = document.getElementById("downloadSalesReportPDFOrExcel");
+  form.addEventListener("submit", (e) => {
+    const data = {};
+    $("#downloadSalesReportPDFOrExcel")
+      .serializeArray()
+      .forEach((val) => {
+        data[`${val.name}`] = val.value?.trim();
+      });
 
-      if (new Date(endDate) <= new Date(startDate)) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "End date must be greater than the start date.",
- 
-        });
-        return;
-      }
+    let err = false;
 
-      // Close the modal after clicking the download button
-      closeDateRangeModal();
+	if (!data?.type) {
+  showErr[0].classList.add("errDiv");
+  showErr[1].classList.add("errDiv");
+  errP[0].innerHTML = "<span class='error-message'>This field is required</span>";
+  err = true;
+}
 
-      // Perform your download action with startDate and endDate
-      window.location.href = `/sales-report?startDate=${startDate}&endDate=${endDate}`;
+if (!data?.full && !data?.fromDate) {
+  showErr[2].classList.add("errDiv");
+  errP[1].innerHTML = "<span class='error-message'>This field is required</span>";
+  err = true;
+}
+
+if (!data?.full && !data?.toDate) {
+  showErr[3].classList.add("errDiv");
+  errP[2].innerHTML = "<span class='error-message'>This field is required</span>";
+  err = true;
+}
+
+if (!data?.full && data?.toDate && data?.fromDate && data.toDate < data.fromDate) {
+  showErr[2].classList.add("errDiv");
+  showErr[3].classList.add("errDiv");
+  errP[1].innerHTML =
+    "<span class='error-message'>From date needs to be less than or equal to the to date</span>";
+  err = true;
+}
+
+if (!data?.full && data?.toDate && new Date(data.toDate) > new Date()) {
+  showErr[3].classList.add("errDiv");
+  errP[2].innerHTML = `<span class='error-message'>Today is ${new Date().toISOString().split('T')[0].split('-').reverse().join('-')} choose a date less than or equal to this</span>`;
+  err = true;
+}
+
+if (!data?.full && data?.fromDate && new Date(data.fromDate) > new Date()) {
+  showErr[2].classList.add("errDiv");
+  errP[1].innerHTML = `<span class='error-message'>Today is ${new Date().toISOString().split('T')[0].split('-').reverse().join('-')} choose a date less than or equal</span>`;
+  err = true;
+}
+
+
+    if (err) {
+      e.preventDefault();
     }
-    function downloadPdfForToday() {
-      // Get the current date
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-      var yyyy = today.getFullYear();
+  });
+} catch (err) {
+  console.error('sales report err',err);
+}
 
-      var currentDate = yyyy + '-' + mm + '-' + dd;
 
-      // Perform your download action with the current date
-      window.location.href = `/sales-report?date=${currentDate}`;
-
-      // Close the modal after clicking the download button
-      closeDateRangeModal();
-    }
-  </script>
+</script>
 
 
 <script>

@@ -171,9 +171,9 @@ router.get(
   "/expired-coupon",
   middlewares.authenticateMiddleware,
   couponController.expiredCoupon
-);
+); 
 
-router.get(
+router.post(
   "/sales-report",
   middlewares.authenticateMiddleware,
   adminController.salesReport

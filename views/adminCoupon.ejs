@@ -29,8 +29,10 @@ rel="stylesheet"
 
     
     <link rel="stylesheet" href="css/admindash.css">
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
-
+    
 
     <section id="content">
         <main>
@@ -42,63 +44,42 @@ rel="stylesheet"
                 <div class="order">
                     <div class="head">
                         <h3>Coupons</h3>
-                        <i class='bx bx-search'></i>
-                        <i class='bx bx-filter'></i>
+                       
                     </div>
-                    <table>
-
+                    <table id="orderTable">
                         <thead>
                             <tr>
-                                <th>SI. No</th>
+                                
+                                <th>SI No</th>
                                 <th>Coupon Code</th>
                                 <th>Discount</th>
                                 <th>Valid From</th>
                                 <th>Expires At</th>
                                 
-                                
                             </tr>
                         </thead>
-                        <% for(let i=0;i<coupon.length;i++){ %>
-                            <tbody>
-                                <tr>
-                                    <td >
-                                        <p>
-                                            <%=i+1 %>
-                                        </p>
-                                        
-                                    </td>
-                                    
-                                    <td>
-
-                                        <p>
-                                            <%= coupon[i].code %>
-                                            
-                                        </p>
-                                        
-                                    </td>
-                                    <td> <%= coupon[i].discountPercentage %></td>
-                                    <td>
-                                        <%= coupon[i].createdAt.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
-
-                                    </td>
-                                    <td>
-                                        <%= coupon[i].expirationDate.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
-
-                                    </td>
-                                    
-                                    
-
-                                    <td><a href="/delete-coupon?id=<%=coupon[i]._id%>">
-                                      <button class="btn btn-danger">Delete</button></a>
-                                    </td>
-
-
-                                </tr>
+                        <tbody>
+                          <%  for(let i = 0;i < coupon.length;i++) {%>
+                
+                            <tr>
+                              
                                 
-                                <% } %>
-                                
-                            </tbody>
-                            
+                                <td><%= i+1 %></td>
+                                <td><%=coupon[i].code%></td>
+                                <td><%=coupon[i].discountPercentage%></td>
+                                <td>
+                                    <%= coupon[i].createdAt.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+                                </td>
+                                <td>
+                                    <%= coupon[i].expirationDate.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+                                </td>
+                                <td><a href="/delete-coupon?id=<%=coupon[i]._id%>">
+                                    <button class="btn btn-danger">Delete</button></a>
+                                  </td>
+                            </tr>
+                            <%}%>
+                           
+                        </tbody>
                     </table>
                     
                 </div>
@@ -119,6 +100,40 @@ rel="stylesheet"
     </section>
 
 
-    </body>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script>
+
+$(document).ready(function () {
+    // Initialize DataTables
+    var table = $('#orderTable').DataTable({
+        "paging": true,       // Enable pagination
+        "pageLength": 10,     // Set the number of rows per page
+        "columnDefs": [
+            { "width": "5%", "targets": [0] },
+            { "width": "5%", "targets": [1] },
+            { "width": "24%", "targets": [2] },
+            { "width": "35%", "targets": [3] },
+            { "width": "20%", "targets": [4] },
+            { "width": "25%", "targets": [5] },
+            { "width": "25%", "targets": [6] }
+        ]
+    });
+
+    // When the user types in the search box
+    $("#name-search").on("keyup", function () {
+        var searchText = $(this).val().toLowerCase();
+
+        // Use DataTables search API to filter rows
+        table.search(searchText).draw();
+    });
+});
+
+  </script>
+  </body>
     </html>
+
+   
