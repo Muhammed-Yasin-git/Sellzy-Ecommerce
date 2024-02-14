@@ -1,6 +1,7 @@
 const productDb = require("../model/productsmodel");
 const cartDb = require("../model/cartmodel");
-
+const sharp  =require("sharp")
+const path =require("path")
 const fs = require("fs");
 
 exports.findproducts = (req, res) => {
@@ -13,35 +14,55 @@ exports.findproducts = (req, res) => {
       res.send({ message: "error while retreiving product information" });
     });
 };
-// Route handler for adding a new product with multiple images
-exports.newproduct = (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).send("No file(s) uploaded.");
-  }
+exports.newproduct = async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).send("No file(s) uploaded.");
+    }
 
-  // Handle multiple uploaded files
-  const images = req.files.map((file) => file.filename);
+    const images = [];
+    
+    // Loop through each uploaded file
+    for (const file of req.files) {
+      // Generate unique filenames for the resized image and original image
+      const imagePath = `resizedImg${file.filename}`;
+      try {
+        // Resize and process the image using Sharp, then save to file
+        await sharp((path.join(__dirname, '../../images',`${file.filename}`)))
+          .resize(200, 200, { fit: "cover", position: "centre" })
+          .toFile(path.join(__dirname, '../../images',`resizedImg${file.filename}`));
 
-  const product = new productDb({
-    pname: req.body.pname,
-    category: req.body.category,
-    description: req.body.description,
-    price: req.body.price,
-    discount: req.body.discount,
-    stock: req.body.stock,
-    prd_image: images,
-  });
+        // Push the image path to the array
+        images.push(imagePath);
+      } catch (resizeError) { 
+        console.error("Error resizing image:", resizeError);
+        return res.status(500).json({ message: "Error resizing image", error: resizeError });
+      }
+    }
 
-  product
-    .save()
-    .then((data) => {
-      console.log(data);
-      res.redirect("/admin-products");
-    })
-    .catch((err) => {
-      res.send(err);
+    // Create a new product with the processed images
+    const product = new productDb({
+      pname: req.body.pname,
+      category: req.body.category,
+      description: req.body.description,
+      price: req.body.price,
+      discount: req.body.discount,
+      stock: req.body.stock,
+      prd_image: images,
     });
+
+    // Save the product to the database
+    const data = await product.save();
+    console.log("Product saved successfully:", data);
+
+    // Redirect to admin-products page
+    res.redirect("/admin-products");
+  } catch (err) {
+    console.error("Error saving product:", err);
+    res.status(500).json({ message: "Error saving product", error: err });
+  }
 };
+
 
 exports.updateproduct = (req, res) => {
   const id = req.body.productId;
