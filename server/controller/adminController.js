@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const CsvParser = require("json2csv").Parser;
 const ejs = require("ejs")
-const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-core")
 
 exports.find = (req, res) => {
   Userdb.find()
@@ -159,6 +159,7 @@ exports.logout = (req, res) => {
     try {
       const browser = await puppeteer.launch({ 
         headless: "new",
+        executablePath: '/snap/bin/chromium',
       });
 
       const order = await getSalesReport(req.body.fromDate, req.body.toDate, req.body.full);
