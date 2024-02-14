@@ -153,7 +153,7 @@ exports.logout = (req, res) => {
     res.status(500).send("Internal server err");
   }
 }),
-
+ 
   exports.salesReport= async (req, res) => {
     let renderedTemplate;
     try {
