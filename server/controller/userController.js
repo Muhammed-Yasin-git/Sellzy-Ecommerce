@@ -70,38 +70,29 @@ exports.find = (req, res) => {
           .compare(password, user.password)
           .then((isPasswordValid) => {
             if (isPasswordValid) {
-              blockDb
-                .find({ email: nemail })
-                .then((data) => {
-                  Userdb.updateOne(
-                    { email: nemail },
-                    { $set: { status: "Active" } }
-                  )
-                    .then(() => {
-                      // Set email in session for future use
-                      req.session.email = nemail;
-                      req.session.userAuthenticated = true;
-                      if (data.length !== 0) {
-                        req.session.isBlock = true;
-                        res.redirect("/signin");
-                      } else {
-                        res.redirect("/");
-                      }
-                    })
-                    .catch((err) => {
-                      console.error(err);
-                      // Handle the error, if needed
-                      res
-                        .status(500)
-                        .send({ message: "Error updating user status" });
-                    });
-                })
-                .catch((err) => {
-                  console.error(err);
-                  res
-                    .status(500)
-                    .send({ message: "Error checking block status" });
-                });
+              // Directly check if the user is blocked from the user object
+              if (user.block === 'true') {
+                req.session.isBlock = true;
+                console.log(req.session.isBlock);
+                res.redirect("/signin");
+              } else {
+                Userdb.updateOne(
+                  { email: nemail },
+                  { $set: { status: "Active" } }
+                )
+                  .then(() => {
+                    // Set email in session for future use
+                    req.session.email = nemail;
+                    req.session.userAuthenticated = true;
+                    res.redirect("/");
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    res
+                      .status(500)
+                      .send({ message: "Error updating user status" });
+                  });
+              }
             } else {
               req.session.isValidate = true;
               res.redirect("/signin");
