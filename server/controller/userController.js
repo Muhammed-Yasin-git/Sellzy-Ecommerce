@@ -57,7 +57,7 @@ exports.find = (req, res) => {
   if (!req.body) {
     res.status(400).redirect("/signin");
     return;
-  }
+  } 
 
   const nemail = req.body.email;
   const password = req.body.password;

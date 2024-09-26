@@ -207,7 +207,7 @@ let countdown = 60; // Set the initial countdown time in seconds
       .then(data => console.log(data))
       .catch(error => console.error(error));
 
-    countdown = 20; // Reset the countdown
+    countdown = 60; // Reset the countdown
     document.querySelector('.countdown').innerText = '';
     document.querySelector('#resend').style.display = 'none';
     startCountdown(); // Restart the countdown
